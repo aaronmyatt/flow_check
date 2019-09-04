@@ -1,6 +1,5 @@
 import 'package:flow_check/name_offset_stream.dart';
 import 'package:flutter/material.dart';
-import 'dart:developer' as developer;
 
 class FlowListPage extends StatelessWidget {
   final nameOffsetStream;
@@ -45,7 +44,7 @@ class FlowListPage extends StatelessWidget {
                 return Container(
                   decoration: BoxDecoration(
                       border: Border(
-                          bottom: BorderSide(width: 5, color: Colors.black))),
+                          bottom: BorderSide(width: 3, color: Colors.black))),
                   child: Row(
                     children: [
                       Container(

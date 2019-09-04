@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'graph.dart' as graph;
-import 'dart:developer' as developer;
 
 class HomePage extends StatelessWidget {
   final String title;
@@ -74,6 +73,7 @@ class NameInput extends StatelessWidget {
                     onPressed: () {
                       if (textController.text != null) {
                         nameStream.process(textController.text);
+                        textController.clear();
                       }
                     },
                   ),
