@@ -90,5 +90,3 @@ class Graph extends StatelessWidget {
     }
   }
 }
-
-CustomPaint();
