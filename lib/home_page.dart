@@ -1,8 +1,8 @@
 import 'package:flow_check/offset_stream.dart';
-
-import 'name_stream.dart';
 import 'package:flutter/material.dart';
+
 import 'graph.dart' as graph;
+import 'name_stream.dart';
 
 class HomePage extends StatelessWidget {
   final String title;
@@ -31,7 +31,14 @@ class HomePage extends StatelessWidget {
               onTap: () {
                 Navigator.pushNamed(context, '/list');
               },
-            )
+            ),
+            ListTile(
+              leading: Icon(Icons.edit),
+              title: Text('Canvas'),
+              onTap: () {
+                Navigator.pushNamed(context, '/canvas');
+              },
+            ),
           ],
         ),
       ),
@@ -64,7 +71,8 @@ class NameInput extends StatelessWidget {
                 child: StreamBuilder(
                   stream: OffsetStream().getStream,
                   builder: (context, snapshot) {
-                    if (!snapshot.hasData || snapshot.data == Offset(0.0, 0.0)) {
+                    if (!snapshot.hasData ||
+                        snapshot.data == Offset(0.0, 0.0)) {
                       return InactiveButton();
                     } else {
                       return ActiveButton(textController: textController);

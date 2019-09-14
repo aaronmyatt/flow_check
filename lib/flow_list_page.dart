@@ -25,7 +25,14 @@ class FlowListPage extends StatelessWidget {
               onTap: () {
                 Navigator.pushNamed(context, '/list');
               },
-            )
+            ),
+            ListTile(
+              leading: Icon(Icons.edit),
+              title: Text('Canvas'),
+              onTap: () {
+                Navigator.pushNamed(context, '/canvas');
+              },
+            ),
           ],
         ),
       ),
