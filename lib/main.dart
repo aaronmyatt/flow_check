@@ -1,22 +1,25 @@
-import 'package:flow_check/name_offset_stream.dart';
 import 'package:flutter/material.dart';
+import 'home_page.dart' as home;
+import 'flow_list_page.dart' as flow_list;
+
 import 'name_stream.dart';
 import 'offset_stream.dart';
 import 'name_offset_stream.dart';
-import 'home_page.dart' as home;
-import 'flow_list_page.dart' as flow_list;
+import 'error_stream.dart';
 
 void main() => runApp(FlowCheck());
 
 class FlowCheck extends StatelessWidget {
 
-  // This widget is the root of your application.
+  FlowCheck(){
+    AppErrorStream();
+    NameStream();
+    OffsetStream();
+    NameOffsetStream();
+  }
+
   @override
   Widget build(BuildContext context) {
-    NameStream nameStream = NameStream();
-    OffsetStream offsetStream = OffsetStream();
-    NameOffsetStream nameOffsetStream = NameOffsetStream(nameStream.getResults, offsetStream.getResults);
-
     return MaterialApp(
         title: 'Flow Check',
         theme: ThemeData(
@@ -24,8 +27,8 @@ class FlowCheck extends StatelessWidget {
         ),
         initialRoute: '/',
         routes: {
-          '/': (_) => home.HomePage('Flow Check', offsetStream, nameStream),
-          '/list': (_) => flow_list.FlowListPage(nameOffsetStream),
+          '/': (_) => home.HomePage('Flow Check'),
+          '/list': (_) => flow_list.FlowListPage(),
         });
   }
 }

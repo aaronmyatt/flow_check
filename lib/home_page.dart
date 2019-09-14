@@ -1,12 +1,13 @@
+import 'package:flow_check/offset_stream.dart';
+
+import 'name_stream.dart';
 import 'package:flutter/material.dart';
 import 'graph.dart' as graph;
 
 class HomePage extends StatelessWidget {
   final String title;
-  final offsetStream;
-  final nameStream;
 
-  HomePage(this.title, this.offsetStream, this.nameStream);
+  HomePage(this.title);
 
   @override
   Widget build(BuildContext context) {
@@ -35,20 +36,14 @@ class HomePage extends StatelessWidget {
         ),
       ),
       body: Column(
-        children: <Widget>[
-          graph.Graph(this.offsetStream),
-          NameInput(nameStream)
-        ],
+        children: <Widget>[graph.Graph(), NameInput()],
       ),
     );
   }
 }
 
 class NameInput extends StatelessWidget {
-  final nameStream;
   final TextEditingController textController = TextEditingController();
-
-  NameInput(this.nameStream);
 
   @override
   Widget build(BuildContext context) {
@@ -66,22 +61,60 @@ class NameInput extends StatelessWidget {
           Row(
             children: <Widget>[
               Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 30, right: 30),
-                  child: RaisedButton(
-                    child: Text('Submit Flow'),
-                    onPressed: () {
-                      if (textController.text != null) {
-                        nameStream.process(textController.text);
-                        textController.clear();
-                      }
-                    },
-                  ),
+                child: StreamBuilder(
+                  stream: OffsetStream().getStream,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData || snapshot.data == Offset(0.0, 0.0)) {
+                      return InactiveButton();
+                    } else {
+                      return ActiveButton(textController: textController);
+                    }
+                  },
                 ),
               ),
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+class ActiveButton extends StatelessWidget {
+  const ActiveButton({
+    Key key,
+    @required this.textController,
+  }) : super(key: key);
+
+  final TextEditingController textController;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 30, right: 30),
+      child: RaisedButton(
+        child: Text('Submit Flow'),
+        onPressed: () {
+          if (textController.text == null || textController.text == "") {
+          } else {
+            NameStream().process(textController.text);
+            textController.clear();
+            FocusScope.of(context).requestFocus(new FocusNode());
+          }
+        },
+      ),
+    );
+  }
+}
+
+class InactiveButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 30, right: 30),
+      child: RaisedButton(
+        child: Text('Submit Flow'),
+        onPressed: null,
       ),
     );
   }

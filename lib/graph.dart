@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
-class Graph extends StatelessWidget {
-  final offsetStream;
+import 'offset_stream.dart';
 
-  Graph(this.offsetStream);
+class Graph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: offsetStream.getResults,
+        stream: OffsetStream().getStream,
         builder: (BuildContext context, AsyncSnapshot<Offset> snapshot) {
           return _graph(context, snapshot.data ?? Offset(0, 0));
         });
@@ -42,7 +41,10 @@ class Graph extends StatelessWidget {
           children: <Widget>[
             GestureDetector(
               onTapDown: (TapDownDetails details) {
-                offsetStream.process(details.localPosition);
+                if(details.localPosition == Offset(0.0, 0.0)) {
+                } else {
+                  OffsetStream().process(details.localPosition);
+                }
               },
               child: Container(
                 padding:
@@ -50,7 +52,7 @@ class Graph extends StatelessWidget {
                     EdgeInsets.only(
                         top: getYPosition(tapPosition),
                         left: getXPosition(tapPosition)),
-                child: _pointer2,
+                child: tapPosition == Offset(0.0, 0.0) ? null : _pointer2,
                 width: MediaQuery.of(context).size.width * 0.9,
                 height: MediaQuery.of(context).size.width * 0.9,
                 decoration: BoxDecoration(
@@ -88,3 +90,5 @@ class Graph extends StatelessWidget {
     }
   }
 }
+
+CustomPaint();
