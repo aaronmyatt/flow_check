@@ -1,8 +1,8 @@
+import 'package:flow_check/graph.dart' as graph;
+import 'package:flow_check/name_stream.dart';
+import 'package:flow_check/nav_drawer.dart';
 import 'package:flow_check/offset_stream.dart';
 import 'package:flutter/material.dart';
-
-import 'graph.dart' as graph;
-import 'name_stream.dart';
 
 class HomePage extends StatelessWidget {
   final String title;
@@ -11,37 +11,11 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text(this.title),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(this.title),
       ),
-      drawer: Drawer(
-        child: ListView(
-          children: <Widget>[
-            ListTile(
-              leading: Icon(Icons.home),
-              title: Text('Home'),
-              onTap: () {
-                Navigator.pushNamed(context, '/');
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.list),
-              title: Text('List'),
-              onTap: () {
-                Navigator.pushNamed(context, '/list');
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.edit),
-              title: Text('Canvas'),
-              onTap: () {
-                Navigator.pushNamed(context, '/canvas');
-              },
-            ),
-          ],
-        ),
-      ),
+      drawer: NavDrawer(),
       body: Column(
         children: <Widget>[graph.Graph(), NameInput()],
       ),
@@ -103,11 +77,10 @@ class ActiveButton extends StatelessWidget {
       child: RaisedButton(
         child: Text('Submit Flow'),
         onPressed: () {
-          if (textController.text == null || textController.text == "") {
-          } else {
+          if (textController.text == null || textController.text == "") {} else {
             NameStream().process(textController.text);
             textController.clear();
-            FocusScope.of(context).requestFocus(new FocusNode());
+            FocusScope.of(context).requestFocus(FocusNode());
           }
         },
       ),

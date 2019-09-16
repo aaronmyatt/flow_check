@@ -1,41 +1,16 @@
 import 'package:flow_check/name_offset_stream.dart';
+import 'package:flow_check/nav_drawer.dart';
 import 'package:flutter/material.dart';
 
 class FlowListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text('Flow List'),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Flow List'),
       ),
-      drawer: Drawer(
-        child: ListView(
-          children: <Widget>[
-            ListTile(
-              leading: Icon(Icons.home),
-              title: Text('Home'),
-              onTap: () {
-                Navigator.pushNamed(context, '/');
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.list),
-              title: Text('List'),
-              onTap: () {
-                Navigator.pushNamed(context, '/list');
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.edit),
-              title: Text('Canvas'),
-              onTap: () {
-                Navigator.pushNamed(context, '/canvas');
-              },
-            ),
-          ],
-        ),
-      ),
+      drawer: NavDrawer(),
       body: StreamBuilder(
           stream: NameOffsetStream().getStream,
           initialData: [NameOffset(name: "Aaron", offset: Offset(1.0, 1.0))],
