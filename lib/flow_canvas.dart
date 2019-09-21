@@ -1,26 +1,26 @@
+import 'package:flow_check/flow_areas.dart';
 import 'package:flow_check/nav_drawer.dart';
 import 'package:flutter/material.dart';
 
 class FlowCanvas extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-        appBar: new AppBar(
-          title: new Text('Flow List'),
+    final width = MediaQuery
+        .of(context)
+        .size
+        .width * 0.9;
+
+    return Scaffold(
+        appBar: AppBar(
+          title: Text('Flow List'),
         ),
         drawer: NavDrawer(),
         body: Container(
           child: CustomPaint(
             painter: FlowShapes(),
           ),
-          width: MediaQuery
-              .of(context)
-              .size
-              .width * 0.9,
-          height: MediaQuery
-              .of(context)
-              .size
-              .width * 0.9,
+          width: width,
+          height: width,
         ));
   }
 }
@@ -33,43 +33,16 @@ class FlowShapes extends CustomPainter {
     canvas.drawRect(rect, Paint()
       ..color = Colors.yellow);
 
-    Path anxietyArea = Path()
-      ..lineTo(0, size.height * 0.4)..lineTo(
-          size.height * 0.4, size.height * 0.4)..lineTo(size.height * 0.8, 0)
-      ..close();
-
-    Path doubtArea = Path()
-      ..moveTo(0, size.height * 0.4)
-      ..lineTo(0, size.height * 0.8)..lineTo(
-          size.height * 0.4, size.height * 0.4)
-      ..close();
-
-    Path nostalgiaArea = Path()
-      ..moveTo(size.width * 0.2, size.height)
-      ..lineTo(size.width * 0.6, size.height)..lineTo(
-          size.width * 0.6, size.height * 0.6)
-      ..close();
-
-    Path boredemArea = Path()
-      ..moveTo(size.width * 0.6, size.height)
-      ..lineTo(size.width, size.height)..lineTo(
-          size.width, size.height * 0.2)..lineTo(
-          size.width * 0.6, size.height * 0.6)
-      ..close();
-
-    Rect apathyArea =
-    Offset(0, size.height * 0.8) & Size(size.width * 0.2, size.height);
-
-    canvas.drawPath(anxietyArea, Paint()
+    canvas.drawPath(FlowAnxietyArea(size).path, Paint()
       ..color = Colors.black);
-    canvas.drawPath(doubtArea, Paint()
+    canvas.drawPath(FlowDoubtArea(size).path, Paint()
       ..color = Colors.blue);
-    canvas.drawPath(nostalgiaArea, Paint()
+    canvas.drawPath(FlowNostalgiaArea(size).path, Paint()
       ..color = Colors.blue);
-    canvas.drawPath(boredemArea, Paint()
+    canvas.drawPath(FlowBoredomArea(size).path, Paint()
       ..color = Colors.black);
-    canvas.drawRect(apathyArea, Paint()
-      ..color = Colors.white);
+    canvas.drawPath(FlowApathyArea(size).path, Paint()
+      ..color = Colors.red);
   }
 
   @override
