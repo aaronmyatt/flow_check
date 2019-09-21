@@ -11,8 +11,7 @@ import 'offset_stream.dart';
 void main() => runApp(FlowCheck());
 
 class FlowCheck extends StatelessWidget {
-
-  FlowCheck(){
+  FlowCheck() {
     AppErrorStream();
     NameStream();
     OffsetStream();

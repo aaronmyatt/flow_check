@@ -1,9 +1,11 @@
 import 'dart:developer';
+
 import 'package:flutter/widgets.dart' show Offset;
 import 'package:rxdart/subjects.dart' show PublishSubject;
 
 class OffsetStream {
   static final OffsetStream _instance = OffsetStream._internal();
+
   factory OffsetStream() => _instance;
 
   String name;
@@ -16,18 +18,15 @@ class OffsetStream {
     });
   }
 
-  void process(Offset offset)
-  {
+  void process(Offset offset) {
     subject.sink.add(offset);
   }
 
-
-  Stream<Offset> get getStream
-  {
+  Stream<Offset> get getStream {
     return subject.stream;
   }
 
-  void reset(){
+  void reset() {
     OffsetStream().process(Offset(0.0, 0.0));
   }
 }

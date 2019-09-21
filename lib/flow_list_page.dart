@@ -3,7 +3,6 @@ import 'package:flow_check/nav_drawer.dart';
 import 'package:flutter/material.dart';
 
 class FlowListPage extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,8 +37,8 @@ class FlowList extends StatelessWidget {
         NameOffset item = items[index];
         return Container(
           decoration: BoxDecoration(
-              border: Border(
-                  bottom: BorderSide(width: 3, color: Colors.black))),
+              border:
+              Border(bottom: BorderSide(width: 3, color: Colors.black))),
           child: Row(
             children: [
               Container(

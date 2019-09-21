@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'offset_stream.dart';
 
 class Graph extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -41,7 +40,7 @@ class Graph extends StatelessWidget {
           children: <Widget>[
             GestureDetector(
               onTapDown: (TapDownDetails details) {
-                if(details.localPosition == Offset(0.0, 0.0)) {
+                if (details.localPosition == Offset(0.0, 0.0)) {
                 } else {
                   OffsetStream().process(details.localPosition);
                 }

@@ -77,7 +77,8 @@ class ActiveButton extends StatelessWidget {
       child: RaisedButton(
         child: Text('Submit Flow'),
         onPressed: () {
-          if (textController.text == null || textController.text == "") {} else {
+          if (textController.text == null ||
+              textController.text == "") {} else {
             NameStream().process(textController.text);
             textController.clear();
             FocusScope.of(context).requestFocus(FocusNode());

@@ -1,9 +1,10 @@
 import 'dart:developer';
-import 'package:rxdart/subjects.dart' show PublishSubject;
 
+import 'package:rxdart/subjects.dart' show PublishSubject;
 
 class NameStream {
   static final NameStream _instance = NameStream._internal();
+
   factory NameStream() => _instance;
 
   String name;
@@ -16,15 +17,11 @@ class NameStream {
     });
   }
 
-
-  void process(String name)
-  {
+  void process(String name) {
     subject.sink.add(name);
   }
 
-
-  Stream<String> get getStream
-  {
+  Stream<String> get getStream {
     return subject.stream;
   }
 }

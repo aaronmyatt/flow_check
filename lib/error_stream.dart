@@ -1,9 +1,10 @@
 import 'dart:developer';
-import 'package:rxdart/subjects.dart' show PublishSubject;
 
+import 'package:rxdart/subjects.dart' show PublishSubject;
 
 class AppErrorStream {
   static final AppErrorStream _instance = AppErrorStream._internal();
+
   factory AppErrorStream() => _instance;
 
   String name;
@@ -15,15 +16,11 @@ class AppErrorStream {
     });
   }
 
-
-  void process(String message)
-  {
+  void process(String message) {
     subject.add(message);
   }
 
-
-  Stream<String> get getStream
-  {
+  Stream<String> get getStream {
     return subject.stream;
   }
 }
