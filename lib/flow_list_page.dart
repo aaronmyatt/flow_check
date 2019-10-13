@@ -1,5 +1,5 @@
-import 'package:flow_check/name_offset_stream.dart';
 import 'package:flow_check/nav_drawer.dart';
+import 'package:flow_check/persons_flow_stream.dart';
 import 'package:flutter/material.dart';
 
 class FlowListPage extends StatelessWidget {
@@ -11,10 +11,10 @@ class FlowListPage extends StatelessWidget {
       ),
       drawer: NavDrawer(),
       body: StreamBuilder(
-          stream: NameOffsetStream().getStream,
-          initialData: [NameOffset(name: "Aaron", offset: Offset(1.0, 1.0))],
+          stream: PersonsFlowStream().getStream,
+          initialData: [PersonsFlow('Test', 'Flow')],
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-            List<NameOffset> items = snapshot.data;
+            List<PersonsFlow> items = snapshot.data;
             return new FlowList(items: items);
           }),
     );
@@ -27,14 +27,14 @@ class FlowList extends StatelessWidget {
     @required this.items,
   }) : super(key: key);
 
-  final List<NameOffset> items;
+  final List<PersonsFlow> items;
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       itemCount: items.length,
       itemBuilder: (BuildContext context, int index) {
-        NameOffset item = items[index];
+        PersonsFlow item = items[index];
         return Container(
           decoration: BoxDecoration(
               border:
@@ -52,7 +52,7 @@ class FlowList extends StatelessWidget {
                   padding: EdgeInsets.symmetric(vertical: 10),
                   color: Colors.cyanAccent,
                   width: MediaQuery.of(context).size.width * 0.4,
-                  child: Center(child: Text(item.offset.toString())),
+                  child: Center(child: Text(item.flow)),
                 ),
               )
             ],

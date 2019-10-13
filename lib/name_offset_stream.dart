@@ -1,8 +1,9 @@
 import 'dart:developer';
-import 'package:rxdart/rxdart.dart';
-import 'package:rxdart/subjects.dart' show BehaviorSubject;
-import 'package:rxdart/rxdart.dart' show ZipStream;
+
 import 'package:flutter/widgets.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart' show ZipStream;
+import 'package:rxdart/subjects.dart' show BehaviorSubject;
 
 import 'name_stream.dart';
 import 'offset_stream.dart';
@@ -26,14 +27,14 @@ class NameOffsetStream {
   factory NameOffsetStream() => _instance;
 
   List<NameOffset> _state = [];
-  BehaviorSubject<List<NameOffset>> subject =
-      BehaviorSubject<List<NameOffset>>();
+  BehaviorSubject<List<NameOffset>> subject;
 
   NameOffsetStream._internal() {
+    subject = BehaviorSubject<List<NameOffset>>();
     ZipStream.zip2(
       NameStream().getStream,
-      OffsetStream().getStream.where((Offset offset) {
-        return offset != Offset.zero;
+      OffsetStream().getStream.where((SizeOffset offset) {
+        return offset.offset != Offset.zero;
       }),
       _buildNameOffset,
     ).listen(onData);
@@ -53,7 +54,7 @@ class NameOffsetStream {
     OffsetStream().reset();
   }
 
-  NameOffset _buildNameOffset(String name, Offset offset) {
-    return NameOffset(name: name, offset: offset);
+  NameOffset _buildNameOffset(String name, SizeOffset offset) {
+    return NameOffset(name: name, offset: offset.offset);
   }
 }

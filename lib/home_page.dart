@@ -16,9 +16,12 @@ class HomePage extends StatelessWidget {
         title: Text(this.title),
       ),
       drawer: NavDrawer(),
-      body: Column(
-        children: <Widget>[graph.Graph(), NameInput()],
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[graph.Graph(), NameInput()],
+        ),
       ),
+
     );
   }
 }

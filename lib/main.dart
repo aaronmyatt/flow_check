@@ -1,3 +1,5 @@
+import 'package:flow_check/flow_check_stream.dart';
+import 'package:flow_check/persons_flow_stream.dart';
 import 'package:flutter/material.dart';
 
 import 'error_stream.dart';
@@ -16,6 +18,8 @@ class FlowCheck extends StatelessWidget {
     NameStream();
     OffsetStream();
     NameOffsetStream();
+    PersonsFlowStream();
+    FlowCheckStream();
   }
 
   @override

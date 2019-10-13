@@ -7,12 +7,13 @@ class Graph extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder(
         stream: OffsetStream().getStream,
-        builder: (BuildContext context, AsyncSnapshot<Offset> snapshot) {
-          return _graph(context, snapshot.data ?? Offset(0, 0));
+        builder: (BuildContext context, AsyncSnapshot<SizeOffset> snapshot) {
+          return _graph(
+              context, snapshot.data ?? SizeOffset(Offset.zero, Size.zero));
         });
   }
 
-  Widget _graph(BuildContext context, Offset tapPosition) {
+  Widget _graph(BuildContext context, SizeOffset tapPosition) {
     Widget _yAxis = RotatedBox(
       quarterTurns: 3,
       child: Text('CHALLENGE', style: TextStyle(fontWeight: FontWeight.w600)),
@@ -42,16 +43,20 @@ class Graph extends StatelessWidget {
               onTapDown: (TapDownDetails details) {
                 if (details.localPosition == Offset(0.0, 0.0)) {
                 } else {
-                  OffsetStream().process(details.localPosition);
+                  OffsetStream().process(details.localPosition, size: MediaQuery
+                      .of(context)
+                      .size);
                 }
               },
               child: Container(
                 padding:
                     // -15 ensures the icon lands comfortably under where the screen is pressed.
                     EdgeInsets.only(
-                        top: getYPosition(tapPosition),
-                        left: getXPosition(tapPosition)),
-                child: tapPosition == Offset(0.0, 0.0) ? null : _pointer2,
+                        top: getYPosition(tapPosition.offset),
+                        left: getXPosition(tapPosition.offset)),
+                child: tapPosition.offset == Offset(0.0, 0.0)
+                    ? null
+                    : _pointer2,
                 width: MediaQuery.of(context).size.width * 0.9,
                 height: MediaQuery.of(context).size.width * 0.9,
                 decoration: BoxDecoration(
