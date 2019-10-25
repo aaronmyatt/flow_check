@@ -1,7 +1,6 @@
+import 'package:flow_check/conduit/actions.dart' as Conduit;
 import 'package:flow_check/graph.dart' as graph;
-import 'package:flow_check/name_stream.dart';
 import 'package:flow_check/nav_drawer.dart';
-import 'package:flow_check/offset_stream.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -37,27 +36,16 @@ class NameInput extends StatelessWidget {
           TextField(
             textCapitalization: TextCapitalization.words,
             controller: textController,
+            textInputAction: TextInputAction.done,
             decoration: InputDecoration(
               prefixIcon: Icon(Icons.person),
               hintText: 'Enter a name',
             ),
-          ),
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: StreamBuilder(
-                  stream: OffsetStream().getStream,
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData ||
-                        snapshot.data == Offset(0.0, 0.0)) {
-                      return InactiveButton();
-                    } else {
-                      return ActiveButton(textController: textController);
-                    }
-                  },
-                ),
-              ),
-            ],
+            onSubmitted: (text) {
+              Conduit.performAction(Conduit.Actions.NAME_INPUT,
+                  params: {"currentName": textController.text});
+              Conduit.performAction(Conduit.Actions.STORE_FLOW);
+            },
           ),
         ],
       ),
@@ -79,14 +67,7 @@ class ActiveButton extends StatelessWidget {
       padding: const EdgeInsets.only(left: 30, right: 30),
       child: RaisedButton(
         child: Text('Submit Flow'),
-        onPressed: () {
-          if (textController.text == null ||
-              textController.text == "") {} else {
-            NameStream().process(textController.text);
-            textController.clear();
-            FocusScope.of(context).requestFocus(FocusNode());
-          }
-        },
+        onPressed: () {},
       ),
     );
   }

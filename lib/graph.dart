@@ -1,19 +1,25 @@
+import 'package:flow_check/conduit/actions.dart' as Conduit;
 import 'package:flutter/material.dart';
 
-import 'offset_stream.dart';
+class Graph extends StatefulWidget {
+  State createState() => new GraphState();
+}
 
-class Graph extends StatelessWidget {
+class GraphState extends State<Graph> {
+  double screenWidth;
+  double tapX = 0;
+  double tapY = 0;
+
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-        stream: OffsetStream().getStream,
-        builder: (BuildContext context, AsyncSnapshot<SizeOffset> snapshot) {
-          return _graph(
-              context, snapshot.data ?? SizeOffset(Offset.zero, Size.zero));
-        });
+    screenWidth = MediaQuery
+        .of(context)
+        .size
+        .width * 0.9;
+    return _graph(context, tapX, tapY);
   }
 
-  Widget _graph(BuildContext context, SizeOffset tapPosition) {
+  Widget _graph(BuildContext context, double xPos, double yPos) {
     Widget _yAxis = RotatedBox(
       quarterTurns: 3,
       child: Text('CHALLENGE', style: TextStyle(fontWeight: FontWeight.w600)),
@@ -41,24 +47,29 @@ class Graph extends StatelessWidget {
           children: <Widget>[
             GestureDetector(
               onTapDown: (TapDownDetails details) {
-                if (details.localPosition == Offset(0.0, 0.0)) {
-                } else {
-                  OffsetStream().process(details.localPosition, size: MediaQuery
-                      .of(context)
-                      .size);
+                Offset offset = details.localPosition;
+                if (offset == Offset(0.0, 0.0)) {} else {
+                  Conduit.performAction(Conduit.Actions.FLOW_COORDINATES,
+                      params: {"tapX": offset.dx, "tapY": offset.dy});
+                  this.setState(() {
+                    tapX = offset.dx;
+                    tapY = offset.dy;
+                  });
+                  Conduit.performAction(Conduit.Actions.DETERMINE_FLOW,
+                      params: {"width": screenWidth, "height": screenWidth});
                 }
               },
               child: Container(
                 padding:
-                    // -15 ensures the icon lands comfortably under where the screen is pressed.
-                    EdgeInsets.only(
-                        top: getYPosition(tapPosition.offset),
-                        left: getXPosition(tapPosition.offset)),
-                child: tapPosition.offset == Offset(0.0, 0.0)
+                // -15 ensures the icon lands comfortably under where the screen is pressed.
+                EdgeInsets.only(
+                    top: getYPosition(yPos),
+                    left: getXPosition(xPos)),
+                child: Offset(xPos, yPos) == Offset(0.0, 0.0)
                     ? null
                     : _pointer2,
-                width: MediaQuery.of(context).size.width * 0.9,
-                height: MediaQuery.of(context).size.width * 0.9,
+                width: screenWidth,
+                height: screenWidth,
                 decoration: BoxDecoration(
                   border: Border(
                     left: BorderSide(
@@ -76,8 +87,8 @@ class Graph extends StatelessWidget {
     );
   }
 
-  double getXPosition(Offset tapPosition) {
-    var X = tapPosition.dx - 15;
+  double getXPosition(double xPos) {
+    var X = xPos - 15;
     if (X < 0) {
       return 0;
     } else {
@@ -85,8 +96,8 @@ class Graph extends StatelessWidget {
     }
   }
 
-  double getYPosition(Offset tapPosition) {
-    var Y = tapPosition.dy - 15;
+  double getYPosition(double yPos) {
+    var Y = yPos - 15;
     if (Y < 0) {
       return 0;
     } else {
