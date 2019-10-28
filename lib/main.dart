@@ -1,8 +1,8 @@
 import 'package:flow_check/conduit/actions.dart' as Conduit;
 import 'package:flutter/material.dart';
 
-import 'flow_canvas.dart' as canvas;
 import 'flow_list_page.dart' as flow_list;
+import 'flow_view_page.dart' as flow_view;
 import 'home_page.dart' as home;
 
 void main() => runApp(FlowCheck());
@@ -23,8 +23,8 @@ class FlowCheck extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (_) => home.HomePage('Flow Check'),
-        '/list': (_) => flow_list.FlowListPage(),
-        '/canvas': (_) => canvas.FlowCanvas(),
+        '/list': (_) => flow_list.FlowListPage('Flow History'),
+        '/canvas': (_) => flow_view.FlowViewPage('Flow View'),
       },
     );
   }

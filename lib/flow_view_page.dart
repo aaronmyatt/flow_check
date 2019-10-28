@@ -4,7 +4,11 @@ import 'package:flutter/material.dart';
 
 import 'conduit/actions.dart' as Conduit;
 
-class FlowCanvas extends StatelessWidget {
+class FlowViewPage extends StatelessWidget {
+  final String pageTitle;
+
+  FlowViewPage(this.pageTitle);
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery
@@ -38,7 +42,7 @@ class FlowCanvas extends StatelessWidget {
 
               return Scaffold(
                 appBar: AppBar(
-                  title: Text('Flow List'),
+                  title: Text(pageTitle),
                 ),
                 drawer: NavDrawer(),
                 body: Column(

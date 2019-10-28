@@ -3,6 +3,10 @@ import 'package:flow_check/nav_drawer.dart';
 import 'package:flutter/material.dart';
 
 class FlowListPage extends StatelessWidget {
+  final String pageTitle;
+
+  FlowListPage(this.pageTitle);
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -18,7 +22,7 @@ class FlowListPage extends StatelessWidget {
               if (snapshot.hasError) return Text('Error: ${snapshot.error}');
               return Scaffold(
                 appBar: AppBar(
-                  title: Text('Flow List'),
+                  title: Text(pageTitle),
                 ),
                 drawer: NavDrawer(),
                 body: FlowList(items: snapshot.data),

@@ -11,24 +11,17 @@ class NavDrawer extends StatelessWidget {
       child: ListView(
         children: <Widget>[
           ListTile(
-            leading: Icon(Icons.home),
-            title: Text('Home'),
+            leading: Icon(Icons.touch_app),
+            title: Text('Flow Check'),
             onTap: () {
               Navigator.pushNamed(context, '/');
             },
           ),
           ListTile(
             leading: Icon(Icons.list),
-            title: Text('List'),
+            title: Text('Flow History'),
             onTap: () {
               Navigator.pushNamed(context, '/list');
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.edit),
-            title: Text('Canvas'),
-            onTap: () {
-              Navigator.pushNamed(context, '/canvas');
             },
           ),
         ],

@@ -4,20 +4,23 @@ import 'package:flow_check/nav_drawer.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
-  final String title;
+  final String pageTitle;
 
-  HomePage(this.title);
+  HomePage(this.pageTitle);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(this.title),
+        title: Text(this.pageTitle),
       ),
       drawer: NavDrawer(),
       body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[graph.Graph(), NameInput()],
+        child: Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Column(
+            children: <Widget>[graph.Graph(), NameInput()],
+          ),
         ),
       ),
 
