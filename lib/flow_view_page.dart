@@ -53,10 +53,12 @@ class FlowViewPage extends StatelessWidget {
                         Navigator.pop(context);
                       },
                     ),
-                    Container(
-                      child: shapes,
-                      width: width,
-                      height: width,
+                    Center(
+                      child: Container(
+                        child: shapes,
+                        width: width,
+                        height: width,
+                      ),
                     ),
                     Text(flowType.toUpperCase()),
                   ],
