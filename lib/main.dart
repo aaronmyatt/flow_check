@@ -1,9 +1,9 @@
 import 'package:flow_check/conduit/actions.dart' as Conduit;
+import 'package:flow_check/flow_list_page.dart' as flow_list;
+import 'package:flow_check/flow_view_page.dart' as flow_view;
+import 'package:flow_check/home_page.dart' as home;
+import 'package:flow_check/theme.dart';
 import 'package:flutter/material.dart';
-
-import 'flow_list_page.dart' as flow_list;
-import 'flow_view_page.dart' as flow_view;
-import 'home_page.dart' as home;
 
 void main() => runApp(FlowCheck());
 
@@ -16,10 +16,7 @@ class FlowCheck extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flow Check',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: flowCheckTheme,
       initialRoute: '/',
       routes: {
         '/': (_) => home.HomePage('Flow Check'),

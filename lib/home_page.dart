@@ -16,11 +16,8 @@ class HomePage extends StatelessWidget {
       ),
       drawer: NavDrawer(),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Column(
-            children: <Widget>[graph.Graph(), NameInput()],
-          ),
+        child: Column(
+          children: <Widget>[graph.Graph(), NameInput()],
         ),
       ),
 
@@ -41,7 +38,10 @@ class NameInput extends StatelessWidget {
             controller: textController,
             textInputAction: TextInputAction.done,
             decoration: InputDecoration(
-              prefixIcon: Icon(Icons.person),
+              prefixIcon: Icon(Icons.person, color: Theme
+                  .of(context)
+                  .iconTheme
+                  .color,),
               hintText: 'Enter a name',
             ),
             onSubmitted: (text) {

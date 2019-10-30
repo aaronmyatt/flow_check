@@ -8,23 +8,32 @@ class NavDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: ListView(
-        children: <Widget>[
-          ListTile(
-            leading: Icon(Icons.touch_app),
-            title: Text('Flow Check'),
-            onTap: () {
-              Navigator.pushNamed(context, '/');
-            },
+      child: Container(
+        color: Theme
+            .of(context)
+            .colorScheme
+            .secondary,
+        child: ListTileTheme(
+          iconColor: Colors.white,
+          child: ListView(
+            children: <Widget>[
+              ListTile(
+                leading: Icon(Icons.touch_app),
+                title: Text('Flow Check'),
+                onTap: () {
+                  Navigator.pushNamed(context, '/');
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.list),
+                title: Text('Flow History'),
+                onTap: () {
+                  Navigator.pushNamed(context, '/list');
+                },
+              ),
+            ],
           ),
-          ListTile(
-            leading: Icon(Icons.list),
-            title: Text('Flow History'),
-            onTap: () {
-              Navigator.pushNamed(context, '/list');
-            },
-          ),
-        ],
+        ),
       ),
     );
   }

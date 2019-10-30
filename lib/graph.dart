@@ -29,61 +29,72 @@ class GraphState extends State<Graph> {
         textAlign: TextAlign.justify,
         style: TextStyle(fontWeight: FontWeight.w600));
 
-    Widget _pointer2 = Text(
+    Widget _pointer = Text(
       String.fromCharCode(Icons.details.codePoint),
       style: TextStyle(
           fontFamily: Icons.details.fontFamily,
           package: Icons.details.fontPackage,
           fontSize: 24.0,
-          color: Colors.black),
+          color: Theme
+              .of(context)
+              .textTheme
+              .title
+              .color),
     );
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        _yAxis,
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            GestureDetector(
-              onTapDown: (TapDownDetails details) {
-                Offset offset = details.localPosition;
-                if (offset == Offset(0.0, 0.0)) {} else {
-                  Conduit.performAction(Conduit.Actions.FLOW_COORDINATES,
-                      params: {"tapX": offset.dx, "tapY": offset.dy});
-                  this.setState(() {
-                    tapX = offset.dx;
-                    tapY = offset.dy;
-                  });
-                  Conduit.performAction(Conduit.Actions.DETERMINE_FLOW,
-                      params: {"width": screenWidth, "height": screenWidth});
-                }
-              },
-              child: Container(
-                padding:
-                // -15 ensures the icon lands comfortably under where the screen is pressed.
-                EdgeInsets.only(
-                    top: getYPosition(yPos),
-                    left: getXPosition(xPos)),
-                child: Offset(xPos, yPos) == Offset(0.0, 0.0)
-                    ? null
-                    : _pointer2,
-                width: screenWidth,
-                height: screenWidth,
-                decoration: BoxDecoration(
-                  border: Border(
-                    left: BorderSide(
-                        color: Color.fromRGBO(0, 0, 0, 1.0), width: 2.0),
-                    bottom: BorderSide(
-                        color: Color.fromRGBO(0, 0, 0, 1.0), width: 2.0),
+    return Padding(
+      padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          _yAxis,
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              GestureDetector(
+                onTapDown: (TapDownDetails details) {
+                  Offset offset = details.localPosition;
+                  if (offset == Offset(0.0, 0.0)) {} else {
+                    Conduit.performAction(Conduit.Actions.FLOW_COORDINATES,
+                        params: {"tapX": offset.dx, "tapY": offset.dy});
+                    this.setState(() {
+                      tapX = offset.dx;
+                      tapY = offset.dy;
+                    });
+                    Conduit.performAction(Conduit.Actions.DETERMINE_FLOW,
+                        params: {"width": screenWidth, "height": screenWidth});
+                  }
+                },
+                child: Container(
+                  padding:
+                  // -15 ensures the icon lands comfortably under where the screen is pressed.
+                  EdgeInsets.only(
+                      top: getYPosition(yPos),
+                      left: getXPosition(xPos)),
+                  child: Offset(xPos, yPos) == Offset(0.0, 0.0)
+                      ? null
+                      : _pointer,
+                  width: screenWidth,
+                  height: screenWidth,
+                  decoration: BoxDecoration(
+                    color: Theme
+                        .of(context)
+                        .colorScheme
+                        .secondaryVariant,
+                    border: Border(
+                      left: BorderSide(
+                          color: Color.fromRGBO(0, 0, 0, 1.0), width: 2.0),
+                      bottom: BorderSide(
+                          color: Color.fromRGBO(0, 0, 0, 1.0), width: 2.0),
+                    ),
                   ),
                 ),
               ),
-            ),
-            _xAxis
-          ],
-        ),
-      ],
+              _xAxis
+            ],
+          ),
+        ],
+      ),
     );
   }
 
