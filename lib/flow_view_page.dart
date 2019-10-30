@@ -81,10 +81,10 @@ class FlowShape extends CustomPainter {
     var flowArea = activeFlowArea(size.width, size.height);
 
     canvas.drawRect(rect, Paint()
-      ..color = Colors.yellow);
+      ..color = Color(0xFFF2F1F0));
 
     canvas.drawPath(flowArea.path, Paint()
-      ..color = Colors.black);
+      ..color = Color(0xFF0477BF));
   }
 
   activeFlowArea(width, height) {
@@ -113,23 +113,23 @@ class AllShapes extends CustomPainter {
     var rect = Offset.zero & size;
 
     canvas.drawRect(rect, Paint()
-      ..color = Colors.yellow);
+      ..color = Color(0xFF0477BF));
 
     canvas.drawPath(FlowAnxietyArea(size.width, size.height).path,
         Paint()
-          ..color = Colors.black);
+          ..color = Color(0xFFF2F1F0));
     canvas.drawPath(FlowDoubtArea(size.width, size.height).path,
         Paint()
-          ..color = Colors.blue);
+          ..color = Color(0xFFF2F1F0));
     canvas.drawPath(FlowNostalgiaArea(size.width, size.height).path,
         Paint()
-          ..color = Colors.blue);
+          ..color = Color(0xFFF2F1F0));
     canvas.drawPath(FlowBoredomArea(size.width, size.height).path,
         Paint()
-          ..color = Colors.black);
+          ..color = Color(0xFFF2F1F0));
     canvas.drawPath(FlowApathyArea(size.width, size.height).path,
         Paint()
-          ..color = Colors.red);
+          ..color = Color(0xFF0477BF));
   }
 
   @override
