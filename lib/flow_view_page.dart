@@ -1,5 +1,5 @@
+import 'package:flow_check/bottom_navigation_bar.dart';
 import 'package:flow_check/flow_areas.dart';
-import 'package:flow_check/nav_drawer.dart';
 import 'package:flutter/material.dart';
 
 import 'conduit/actions.dart' as Conduit;
@@ -44,15 +44,9 @@ class FlowViewPage extends StatelessWidget {
                 appBar: AppBar(
                   title: Text(pageTitle),
                 ),
-                drawer: NavDrawer(),
+                bottomNavigationBar: BottomNavBar(1),
                 body: Column(
                   children: <Widget>[
-                    RaisedButton(
-                      child: Text('Back'),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
                     Center(
                       child: Container(
                         child: shapes,
@@ -60,7 +54,12 @@ class FlowViewPage extends StatelessWidget {
                         height: width,
                       ),
                     ),
-                    Text(flowType.toUpperCase()),
+                    Text(
+                      "In a state of: ${flowType.toUpperCase()}",
+                      style: TextStyle(
+                        fontSize: 24.0,
+                      ),
+                    ),
                   ],
                 ),
               );

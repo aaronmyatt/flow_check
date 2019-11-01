@@ -1,9 +1,11 @@
 import 'package:flow_check/conduit/actions.dart' as Conduit;
-import 'package:flow_check/nav_drawer.dart';
 import 'package:flutter/material.dart';
+
+import 'bottom_navigation_bar.dart';
 
 class FlowListPage extends StatelessWidget {
   final String pageTitle;
+  final int currentIndex = 1;
 
   FlowListPage(this.pageTitle);
 
@@ -24,7 +26,7 @@ class FlowListPage extends StatelessWidget {
                 appBar: AppBar(
                   title: Text(pageTitle),
                 ),
-                drawer: NavDrawer(),
+                bottomNavigationBar: BottomNavBar(currentIndex),
                 body: FlowList(items: snapshot.data),
               );
           }
