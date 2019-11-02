@@ -25,7 +25,9 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
   rxdart: ^0.22.1
-  path_provider: ^1.4.0 #https://github.com/flutter/plugins/tree/master/packages/path_provider
+  path_provider: ^1.4.0 # https://github.com/flutter/plugins/tree/master/packages/path_provider
+  strings: ^0.1.2 # https://pub.dev/packages/strings
+
 
 dev_dependencies:
   flutter_test:

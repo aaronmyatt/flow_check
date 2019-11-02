@@ -1,5 +1,6 @@
 import 'package:flow_check/conduit/actions.dart' as Conduit;
 import 'package:flutter/material.dart';
+import 'package:strings/strings.dart';
 
 import 'bottom_navigation_bar.dart';
 
@@ -45,64 +46,28 @@ class FlowList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
+    return ListView.builder(
       itemCount: items.length,
       itemBuilder: (BuildContext context, int index) {
         var item = items[index];
-        return FlowListItem(item);
-      },
-      separatorBuilder: (BuildContext context, int index) {
-        return Divider(
-          height: 3,
+        return ListTile(
+          onTap: () {
+            Conduit.performAction(Conduit.Actions.ACTIVATE_FLOW,
+                params: {"flow": item});
+            Navigator.pushNamed(context, '/canvas');
+          },
+          title: Text(
+              capitalize(item["name"])
+          ),
+          subtitle: Text(
+            "Feeling: ${capitalize(item["flowType"])}",
+          ),
+          trailing: IconButton(
+            icon: Icon(Icons.chevron_right),
+            onPressed: null,
+          ),
         );
       },
-    );
-  }
-}
-
-class FlowListItem extends StatelessWidget {
-  final item;
-
-  FlowListItem(this.item);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: GestureDetector(
-        onTap: () {
-          Conduit.performAction(Conduit.Actions.ACTIVATE_FLOW,
-              params: {"flow": item});
-          Navigator.pushNamed(context, '/canvas');
-        },
-        child: Row(
-          children: [
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.only(top: 10, bottom: 10, left: 30),
-                color: Theme
-                    .of(context)
-                    .colorScheme
-                    .primaryVariant,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      item["name"].toUpperCase(),
-                    ),
-                    Divider(
-                      height: 5,
-                    ),
-                    Text(
-                      "Could be experiencing: ${item["flowType"]
-                          .toUpperCase()}",
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
