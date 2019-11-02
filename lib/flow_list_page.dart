@@ -25,6 +25,7 @@ class FlowListPage extends StatelessWidget {
               if (snapshot.hasError) return Text('Error: ${snapshot.error}');
               return Scaffold(
                 appBar: AppBar(
+                  automaticallyImplyLeading: false,
                   title: Text(pageTitle),
                 ),
                 bottomNavigationBar: BottomNavBar(currentIndex),
