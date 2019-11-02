@@ -49,6 +49,7 @@ class FlowViewPage extends StatelessWidget {
                   children: <Widget>[
                     Center(
                       child: Container(
+                        padding: EdgeInsets.only(top: 20, bottom: 20),
                         child: shapes,
                         width: width,
                         height: width,
