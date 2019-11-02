@@ -28,7 +28,7 @@ class BottomNavBarState extends State<BottomNavBar> {
         ),
       ],
       currentIndex: currentIndex,
-      selectedItemColor: Theme.of(context).primaryColor,
+      selectedItemColor: Colors.black54,
       onTap: (int item) {
         switch (item) {
           case 0:

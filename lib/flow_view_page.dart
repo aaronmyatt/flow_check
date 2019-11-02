@@ -1,6 +1,7 @@
 import 'package:flow_check/bottom_navigation_bar.dart';
 import 'package:flow_check/flow_areas.dart';
 import 'package:flutter/material.dart';
+import 'package:strings/strings.dart';
 
 import 'conduit/actions.dart' as Conduit;
 
@@ -39,7 +40,6 @@ class FlowViewPage extends StatelessWidget {
                   painter: FlowShape(flowType),
                 );
               }
-
               return Scaffold(
                 appBar: AppBar(
                   title: Text(pageTitle),
@@ -49,14 +49,19 @@ class FlowViewPage extends StatelessWidget {
                   children: <Widget>[
                     Center(
                       child: Container(
-                        padding: EdgeInsets.only(top: 20, bottom: 20),
                         child: shapes,
-                        width: width,
-                        height: width,
+                        width: MediaQuery
+                            .of(context)
+                            .size
+                            .width,
+                        height: MediaQuery
+                            .of(context)
+                            .size
+                            .width,
                       ),
                     ),
                     Text(
-                      "In a state of: ${flowType.toUpperCase()}",
+                      "In a state of: ${capitalize(flowType)}",
                       style: TextStyle(
                         fontSize: 24.0,
                       ),
@@ -81,10 +86,10 @@ class FlowShape extends CustomPainter {
     var flowArea = activeFlowArea(size.width, size.height);
 
     canvas.drawRect(rect, Paint()
-      ..color = Color(0xFFF2F1F0));
+      ..color = Colors.black12);
 
     canvas.drawPath(flowArea.path, Paint()
-      ..color = Color(0xFF0477BF));
+      ..color = Colors.black54);
   }
 
   activeFlowArea(width, height) {
@@ -113,23 +118,23 @@ class AllShapes extends CustomPainter {
     var rect = Offset.zero & size;
 
     canvas.drawRect(rect, Paint()
-      ..color = Color(0xFF0477BF));
+      ..color = Colors.white);
 
     canvas.drawPath(FlowAnxietyArea(size.width, size.height).path,
         Paint()
-          ..color = Color(0xFFF2F1F0));
+          ..color = Colors.black45);
     canvas.drawPath(FlowDoubtArea(size.width, size.height).path,
         Paint()
-          ..color = Color(0xFFF2F1F0));
+          ..color = Colors.black45);
     canvas.drawPath(FlowNostalgiaArea(size.width, size.height).path,
         Paint()
-          ..color = Color(0xFFF2F1F0));
+          ..color = Colors.black45);
     canvas.drawPath(FlowBoredomArea(size.width, size.height).path,
         Paint()
-          ..color = Color(0xFFF2F1F0));
+          ..color = Colors.black45);
     canvas.drawPath(FlowApathyArea(size.width, size.height).path,
         Paint()
-          ..color = Color(0xFF0477BF));
+          ..color = Colors.black45);
   }
 
   @override

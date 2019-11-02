@@ -35,11 +35,7 @@ class GraphState extends State<Graph> {
           fontFamily: Icons.details.fontFamily,
           package: Icons.details.fontPackage,
           fontSize: 24.0,
-          color: Theme
-              .of(context)
-              .textTheme
-              .title
-              .color),
+          color: Colors.black),
     );
 
     return Padding(
@@ -69,23 +65,19 @@ class GraphState extends State<Graph> {
                   padding:
                   // -15 ensures the icon lands comfortably under where the screen is pressed.
                   EdgeInsets.only(
-                      top: getYPosition(yPos),
-                      left: getXPosition(xPos)),
-                  child: Offset(xPos, yPos) == Offset(0.0, 0.0)
-                      ? null
-                      : _pointer,
+                      top: getYPosition(yPos), left: getXPosition(xPos)),
+                  child:
+                  Offset(xPos, yPos) == Offset(0.0, 0.0) ? null : _pointer,
                   width: screenWidth,
                   height: screenWidth,
                   decoration: BoxDecoration(
-                    color: Theme
-                        .of(context)
-                        .colorScheme
-                        .secondaryVariant,
                     border: Border(
                       left: BorderSide(
-                          color: Color.fromRGBO(0, 0, 0, 1.0), width: 2.0),
+                        width: 2.0,
+                      ),
                       bottom: BorderSide(
-                          color: Color.fromRGBO(0, 0, 0, 1.0), width: 2.0),
+                        width: 2.0,
+                      ),
                     ),
                   ),
                 ),
