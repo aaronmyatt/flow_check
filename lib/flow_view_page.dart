@@ -30,6 +30,7 @@ class FlowViewPage extends StatelessWidget {
               if (snapshot.hasError) return Text('Error: ${snapshot.error}');
 
               String flowType = snapshot.data["flowType"];
+              String name = snapshot.data["name"];
               Widget shapes;
               if (flowType == 'flow') {
                 shapes = CustomPaint(
@@ -42,7 +43,7 @@ class FlowViewPage extends StatelessWidget {
               }
               return Scaffold(
                 appBar: AppBar(
-                  title: Text(pageTitle),
+                  title: Text("$name's Flow"),
                 ),
                 bottomNavigationBar: BottomNavBar(1),
                 body: Column(
