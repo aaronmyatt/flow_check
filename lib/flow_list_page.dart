@@ -4,6 +4,9 @@ import 'package:strings/strings.dart';
 
 import 'bottom_navigation_bar.dart';
 
+const ONE_MINUTE = 60000;
+const ONE_DAY = 86400000;
+
 class FlowListPage extends StatelessWidget {
   final String pageTitle;
   final int currentIndex = 1;
@@ -57,18 +60,33 @@ class FlowList extends StatelessWidget {
                 params: {"flow": item});
             Navigator.pushNamed(context, '/canvas');
           },
-          title: Text(
-              capitalize(item["name"])
+          leading: Icon(Icons.face, size: 45.0,),
+          title: Row(
+            children: <Widget>[
+              Expanded(
+                child: Text(capitalize(item["name"])),
+              ),
+              timeAgo(item["timestamp"]),
+              Icon(Icons.chevron_right),
+            ],
           ),
           subtitle: Text(
             "Feeling: ${capitalize(item["flowType"])}",
-          ),
-          trailing: IconButton(
-            icon: Icon(Icons.chevron_right),
-            onPressed: null,
           ),
         );
       },
     );
   }
+}
+
+Widget timeAgo(int timestamp) {
+  if (timestamp == null) return Text('');
+  int now = DateTime
+      .now()
+      .millisecondsSinceEpoch;
+  if (((now - timestamp) / ONE_MINUTE) < 6) return Text('Just Now');
+  print(((now - timestamp) / ONE_DAY));
+  if (((now - timestamp) / ONE_DAY) >= 1)
+    return Text('${((now - timestamp) / ONE_DAY)} Days Ago');
+  return Text('Today');
 }
