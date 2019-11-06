@@ -27,6 +27,7 @@ Map<String, dynamic> appStore = {
   "currentFlow": "",
   "flowList": [],
   "activeFlow": {
+    "timestamp": "",
     "name": "",
     "flowType": "",
     "coordinates": {
@@ -48,20 +49,15 @@ dynamic performAction(Actions actionName,
         File file = new File(directory.path + "/appStore.json");
         file.createSync();
         file.writeAsStringSync(json.encode(appStore));
-        log(file.readAsStringSync(), name: actionName.toString());
       }
       break;
     case Actions.FLOW_COORDINATES:
       {
         Directory directory = await getDirectory();
         File jsonFile = new File(directory.path + path);
-        log(jsonFile.readAsStringSync(), name: actionName.toString());
-
         Map<String, dynamic> jsonFileContent =
             json.decode(jsonFile.readAsStringSync());
         jsonFileContent.addAll({"currentCoordinates": params});
-        log(jsonFileContent.toString(), name: actionName.toString());
-
         jsonFile.writeAsStringSync(json.encode(jsonFileContent));
       }
       break;
@@ -69,13 +65,9 @@ dynamic performAction(Actions actionName,
       {
         Directory directory = await getDirectory();
         File jsonFile = new File(directory.path + path);
-        log(jsonFile.readAsStringSync(), name: actionName.toString());
-
         Map<String, dynamic> jsonFileContent =
             json.decode(jsonFile.readAsStringSync());
         jsonFileContent.addAll(params);
-        log(jsonFileContent.toString(), name: actionName.toString());
-
         jsonFile.writeAsStringSync(json.encode(jsonFileContent));
       }
       break;
@@ -90,7 +82,6 @@ dynamic performAction(Actions actionName,
         String flow =
             FlowAreas(params["width"], params["height"]).flowCheck(x, y);
         jsonFileContent.addAll({"currentFlow": flow});
-        log(jsonFileContent.toString(), name: actionName.toString());
         jsonFile.writeAsStringSync(json.encode(jsonFileContent));
       }
       break;
@@ -100,11 +91,13 @@ dynamic performAction(Actions actionName,
         File jsonFile = new File(directory.path + path);
         Map<String, dynamic> jsonFileContent =
             json.decode(jsonFile.readAsStringSync());
-        log(jsonFileContent.toString(), name: actionName.toString());
         Map flow = {
           "name": jsonFileContent["currentName"],
           "flowType": jsonFileContent["currentFlow"],
-          "coordinates": jsonFileContent["currentCoordinates"]
+          "coordinates": jsonFileContent["currentCoordinates"],
+          "timestamp": DateTime
+              .now()
+              .millisecondsSinceEpoch,
         };
         jsonFileContent["flowList"].add(flow);
         jsonFile.writeAsStringSync(json.encode(jsonFileContent));
@@ -128,7 +121,6 @@ dynamic performAction(Actions actionName,
             json.decode(jsonFile.readAsStringSync());
         jsonFileContent["activeFlow"] = params["flow"];
         jsonFile.writeAsStringSync(json.encode(jsonFileContent));
-        log(jsonFileContent.toString(), name: actionName.toString());
       }
       break;
     case Actions.ACTIVE_FLOW:
