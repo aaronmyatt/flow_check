@@ -101,7 +101,7 @@ dynamic performAction(Actions actionName,
         };
         jsonFileContent["flowList"].add(flow);
         jsonFile.writeAsStringSync(json.encode(jsonFileContent));
-        log(jsonFileContent.toString(), name: actionName.toString());
+        return flow;
       }
       break;
     case Actions.LIST_FLOWS:

@@ -47,10 +47,15 @@ class NameInput extends StatelessWidget {
                   .color,),
               hintText: 'Enter a name',
             ),
-            onSubmitted: (text) {
+            onSubmitted: (text) async {
               Conduit.performAction(Conduit.Actions.NAME_INPUT,
                   params: {"currentName": textController.text});
-              Conduit.performAction(Conduit.Actions.STORE_FLOW);
+              textController.clear();
+              Map flow = await Conduit.performAction(
+                  Conduit.Actions.STORE_FLOW);
+              await Conduit.performAction(
+                  Conduit.Actions.ACTIVATE_FLOW, params: {"flow": flow});
+              Navigator.pushNamed(context, '/canvas');
             },
           ),
         ],
