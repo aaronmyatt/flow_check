@@ -21,7 +21,6 @@ ColorScheme flowCheckColorScheme = ColorScheme(
   brightness: Brightness.light,
 );
 
-
 ThemeData flowCheckTheme = ThemeData(
   primaryColor: PRIMARY_COLOUR,
   accentColor: ACCENT1_COLOUR,

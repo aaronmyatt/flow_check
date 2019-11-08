@@ -1,5 +1,6 @@
-import 'package:flow_check/conduit/actions.dart' as Conduit;
 import 'package:flutter/material.dart';
+
+import 'conduit/flutter_actions.dart';
 
 class Graph extends StatefulWidget {
   State createState() => new GraphState();
@@ -51,14 +52,11 @@ class GraphState extends State<Graph> {
                 onTapDown: (TapDownDetails details) {
                   Offset offset = details.localPosition;
                   if (offset == Offset(0.0, 0.0)) {} else {
-                    Conduit.performAction(Conduit.Actions.FLOW_COORDINATES,
-                        params: {"tapX": offset.dx, "tapY": offset.dy});
                     this.setState(() {
                       tapX = offset.dx;
                       tapY = offset.dy;
                     });
-                    Conduit.performAction(Conduit.Actions.DETERMINE_FLOW,
-                        params: {"width": screenWidth, "height": screenWidth});
+                    tapFlowGraph(offset, screenWidth);
                   }
                 },
                 child: Container(

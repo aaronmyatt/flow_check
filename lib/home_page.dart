@@ -1,8 +1,8 @@
-import 'package:flow_check/conduit/actions.dart' as Conduit;
 import 'package:flow_check/graph.dart' as graph;
 import 'package:flutter/material.dart';
 
 import 'bottom_navigation_bar.dart';
+import 'conduit/flutter_actions.dart';
 
 class HomePage extends StatelessWidget {
   final String pageTitle;
@@ -23,7 +23,6 @@ class HomePage extends StatelessWidget {
           children: <Widget>[graph.Graph(), NameInput()],
         ),
       ),
-
     );
   }
 }
@@ -41,20 +40,18 @@ class NameInput extends StatelessWidget {
             controller: textController,
             textInputAction: TextInputAction.done,
             decoration: InputDecoration(
-              prefixIcon: Icon(Icons.person, color: Theme
-                  .of(context)
-                  .iconTheme
-                  .color,),
+              prefixIcon: Icon(
+                Icons.person,
+                color: Theme
+                    .of(context)
+                    .iconTheme
+                    .color,
+              ),
               hintText: 'Enter a name',
             ),
-            onSubmitted: (text) async {
-              Conduit.performAction(Conduit.Actions.NAME_INPUT,
-                  params: {"currentName": textController.text});
+            onSubmitted: (text) {
+              submitFlow(textController.text);
               textController.clear();
-              Map flow = await Conduit.performAction(
-                  Conduit.Actions.STORE_FLOW);
-              await Conduit.performAction(
-                  Conduit.Actions.ACTIVATE_FLOW, params: {"flow": flow});
               Navigator.pushNamed(context, '/canvas');
             },
           ),

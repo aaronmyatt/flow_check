@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flow_check/bottom_navigation_bar.dart';
 import 'package:flow_check/flow_areas.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:strings/strings.dart';
 
 import 'conduit/actions.dart' as Conduit;
@@ -12,13 +15,11 @@ class FlowViewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery
-        .of(context)
-        .size
-        .width * 0.9;
-
     return FutureBuilder(
-        future: Conduit.performAction(Conduit.Actions.ACTIVE_FLOW),
+        future: getApplicationDocumentsDirectory().then((Directory directory) {
+          return Conduit.performAction(Conduit.Actions.ACTIVE_FLOW,
+              params: {'directory': directory});
+        }),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:

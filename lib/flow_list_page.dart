@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flow_check/conduit/actions.dart' as Conduit;
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:strings/strings.dart';
 
 import 'bottom_navigation_bar.dart';
@@ -16,7 +19,10 @@ class FlowListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: Conduit.performAction(Conduit.Actions.LIST_FLOWS),
+        future: getApplicationDocumentsDirectory().then((Directory directory) {
+          return Conduit.performAction(Conduit.Actions.LIST_FLOWS,
+              params: {'directory': directory});
+        }),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
@@ -56,11 +62,16 @@ class FlowList extends StatelessWidget {
         var item = items[index];
         return ListTile(
           onTap: () {
-            Conduit.performAction(Conduit.Actions.ACTIVATE_FLOW,
-                params: {"flow": item});
-            Navigator.pushNamed(context, '/canvas');
+            getApplicationDocumentsDirectory().then((Directory directory) {
+              Conduit.performAction(Conduit.Actions.ACTIVATE_FLOW,
+                  params: {'flow': item, 'directory': directory});
+              Navigator.pushNamed(context, '/canvas');
+            });
           },
-          leading: Icon(Icons.face, size: 45.0,),
+          leading: Icon(
+            Icons.face,
+            size: 45.0,
+          ),
           title: Row(
             children: <Widget>[
               Expanded(

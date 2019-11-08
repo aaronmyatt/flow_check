@@ -84,8 +84,7 @@ class FlowApathyArea extends FlowArea {
   FlowApathyArea(width, height) : super(width, height, 'apathy');
 
   Path get path {
-    Rect rect = Offset(0, height * 0.8) &
-    Size(width * 0.2, height * 0.2);
+    Rect rect = Offset(0, height * 0.8) & Size(width * 0.2, height * 0.2);
     return Path()..addRect(rect);
   }
 }
