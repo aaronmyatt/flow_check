@@ -35,8 +35,7 @@ Map<String, dynamic> appStore = {
 
 dynamic performAction(Actions actionName,
     {Map<String, dynamic> params: const {}}) {
-  log(actionName.toString(), name: 'Conduit Action Name');
-  log(params.toString(), name: 'Conduit Params');
+  logit(actionName, params);
 
   Directory directory = params['directory'] ?? getDirectory();
   File jsonFile = File(directory.path + path);
@@ -126,3 +125,23 @@ Directory getDirectory() {
   return directory;
 }
 
+bool onMobile = (Platform.isAndroid || Platform.isIOS);
+
+void logit(Actions action, Map params) {
+  if (onMobile) {
+    return;
+  }
+  RandomAccessFile logFile = File(
+    getDirectory().path + '/log',
+  ).openSync(mode: FileMode.append);
+  logFile.writeStringSync('${DateTime
+      .now()
+      .millisecondsSinceEpoch} $action ${params} \n');
+  logFile.close();
+}
+
+//void main() {
+//  performAction(Actions.SETUP_STORAGE);
+//  performAction(Actions.NAME_INPUT, params: {'currentName': 'aaron'});
+//  performAction(Actions.STORE_FLOW, params: {'flow': 'flow'});
+//}
