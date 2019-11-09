@@ -17,8 +17,9 @@ class FlowViewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: getApplicationDocumentsDirectory().then((Directory directory) {
-          return Conduit.performAction(Conduit.Actions.ACTIVE_FLOW,
-              params: {'directory': directory});
+          Map output = Conduit.performAction(
+              Conduit.Actions.ACTIVE_FLOW, params: {'directory': directory});
+          return output['data'];
         }),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           switch (snapshot.connectionState) {

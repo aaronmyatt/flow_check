@@ -20,8 +20,9 @@ class FlowListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: getApplicationDocumentsDirectory().then((Directory directory) {
-          return Conduit.performAction(Conduit.Actions.LIST_FLOWS,
-              params: {'directory': directory});
+          Map output = Conduit.performAction(
+              Conduit.Actions.LIST_FLOWS, params: {'directory': directory});
+          return output['data'];
         }),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           switch (snapshot.connectionState) {

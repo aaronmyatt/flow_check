@@ -21,9 +21,9 @@ void submitFlow(text) {
   getApplicationDocumentsDirectory().then((Directory directory) {
     Conduit.performAction(Conduit.Actions.NAME_INPUT,
         params: {'currentName': text, 'directory': directory});
-    Map flow = Conduit.performAction(Conduit.Actions.STORE_REPORT,
+    Map output = Conduit.performAction(Conduit.Actions.STORE_REPORT,
         params: {'directory': directory});
     Conduit.performAction(Conduit.Actions.ACTIVATE_FLOW,
-        params: {"flow": flow, 'directory': directory});
+        params: {"flow": output['data'], 'directory': directory});
   });
 }
