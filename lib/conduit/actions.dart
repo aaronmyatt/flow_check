@@ -130,7 +130,9 @@ Map<String, dynamic> performAction(Actions actionName,
       {
         Map<String, dynamic> jsonFileContent;
         jsonFileContent = json.decode(jsonFile.readAsStringSync());
-        return jsonFileContent["activeFlow"];
+        output.update('data', (value) {
+          return jsonFileContent['activeFlow'];
+        });
       }
       break;
     default:
@@ -154,13 +156,51 @@ void logit(Actions action, Map params) {
   if (onMobile) {
     return;
   }
-  RandomAccessFile logFile = File(
-    getDirectory().path + '/log',
-  ).openSync(mode: FileMode.append);
-  logFile.writeStringSync('${DateTime
-      .now()
-      .millisecondsSinceEpoch} $action ${params} \n');
-  logFile.close();
+  File jsonFile = File(getDirectory().path + '/log.json');
+  bool doesNotExist = (jsonFile.existsSync() == false);
+
+  if (doesNotExist) {
+    jsonFile.createSync();
+    Map<String, dynamic> jsonFileContent = {
+      "entries": []
+    };
+    jsonFile.writeAsStringSync(json.encode(jsonFileContent));
+  }
+
+  Map entry = {
+    "timestamp": DateTime
+        .now()
+        .millisecondsSinceEpoch,
+    "action": action.toString(),
+    "params": params
+  };
+
+  Map<String, dynamic> jsonFileContent;
+  jsonFileContent = json.decode(jsonFile.readAsStringSync());
+  jsonFileContent["entries"].add(entry);
+  jsonFile.writeAsStringSync(json.encode(jsonFileContent));
+
+  logAction(entry);
+}
+
+void logAction(entry) {
+  if (onMobile) {
+    return;
+  }
+  File jsonFile = File(getDirectory().path + '/${entry['action']}.log.json');
+  bool doesNotExist = (jsonFile.existsSync() == false);
+
+  if (doesNotExist) {
+    jsonFile.createSync();
+    Map<String, dynamic> jsonFileContent = {
+      "entries": []
+    };
+    jsonFile.writeAsStringSync(json.encode(jsonFileContent));
+  }
+  Map<String, dynamic> jsonFileContent;
+  jsonFileContent = json.decode(jsonFile.readAsStringSync());
+  jsonFileContent["entries"].add(entry);
+  jsonFile.writeAsStringSync(json.encode(jsonFileContent));
 }
 
 void main() {
