@@ -70,7 +70,7 @@ class FlowList extends StatelessWidget {
             });
           },
           leading: Icon(
-            Icons.error,
+            Icons.face,
             size: 45.0,
           ),
           title: Row(

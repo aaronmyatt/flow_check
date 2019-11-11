@@ -63,6 +63,10 @@ class FlowViewPage extends StatelessWidget {
                             .width,
                       ),
                     ),
+                    Icon(
+                      Icons.face,
+                      size: 85.0,
+                    ),
                     Text(
                       "In a state of: ${capitalize(flowType)}",
                       style: TextStyle(
