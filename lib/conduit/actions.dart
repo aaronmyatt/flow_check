@@ -141,6 +141,7 @@ Map<String, dynamic> performAction(Actions actionName,
       }
   }
 
+  log_output(actionName, output);
   return output;
 }
 
@@ -180,10 +181,26 @@ void logit(Actions action, Map params) {
   jsonFileContent["entries"].add(entry);
   jsonFile.writeAsStringSync(json.encode(jsonFileContent));
 
-  logAction(entry);
+  logAction(entry, 'inputs');
 }
 
-void logAction(entry) {
+void log_output(Actions action, Map output) {
+  if (onMobile) {
+    return;
+  }
+
+  Map entry = {
+    "timestamp": DateTime
+        .now()
+        .millisecondsSinceEpoch,
+    "action": action.toString(),
+    "params": output
+  };
+
+  logAction(entry, 'outputs');
+}
+
+void logAction(entry, in_out) {
   if (onMobile) {
     return;
   }
@@ -193,13 +210,14 @@ void logAction(entry) {
   if (doesNotExist) {
     jsonFile.createSync();
     Map<String, dynamic> jsonFileContent = {
-      "entries": []
+      'inputs': [],
+      'outputs': []
     };
     jsonFile.writeAsStringSync(json.encode(jsonFileContent));
   }
   Map<String, dynamic> jsonFileContent;
   jsonFileContent = json.decode(jsonFile.readAsStringSync());
-  jsonFileContent["entries"].add(entry);
+  jsonFileContent[in_out].add(entry);
   jsonFile.writeAsStringSync(json.encode(jsonFileContent));
 }
 
