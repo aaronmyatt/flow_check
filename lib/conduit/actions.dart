@@ -39,10 +39,7 @@ Map<String, dynamic> performAction(Actions actionName,
     {Map<String, dynamic> params: const {}}) {
   logit(actionName, params);
 
-  Map<String, dynamic> output = {
-    'data': {},
-    'status': 'success'
-  };
+  Map<String, dynamic> output = {'data': {}, 'status': 'success'};
   Directory directory = params['directory'] ?? getDirectory();
   File jsonFile = File(directory.path + path);
 
@@ -54,12 +51,10 @@ Map<String, dynamic> performAction(Actions actionName,
       break;
     case Actions.FLOW_COORDINATES:
       {
-        Map<String, dynamic> jsonFileContent;
-        jsonFileContent = json.decode(jsonFile.readAsStringSync());
-        jsonFileContent.addAll({
-          'currentCoordinates': {'tapX': params['tapX'], 'tapY': params['tapY']}
-        });
-        jsonFile.writeAsStringSync(json.encode(jsonFileContent));
+        Map<String, dynamic> jsonFileContent = saveToStore(
+            directory,
+            'currentCoordinates',
+            {'tapX': params['tapX'], 'tapY': params['tapY']});
         output.update('data', (value) {
           return jsonFileContent['currentCoordinates'];
         });
@@ -113,7 +108,6 @@ Map<String, dynamic> performAction(Actions actionName,
         output.update('data', (value) {
           return jsonFileContent["flowList"];
         });
-
       }
       break;
     case Actions.ACTIVATE_FLOW:
@@ -163,9 +157,7 @@ void logit(Actions action, Map params) {
 
   if (doesNotExist) {
     jsonFile.createSync();
-    Map<String, dynamic> jsonFileContent = {
-      "entries": []
-    };
+    Map<String, dynamic> jsonFileContent = {"entries": []};
     jsonFile.writeAsStringSync(json.encode(jsonFileContent));
   }
 
@@ -210,10 +202,7 @@ void logAction(entry, in_out) {
 
   if (doesNotExist) {
     jsonFile.createSync();
-    Map<String, dynamic> jsonFileContent = {
-      'inputs': [],
-      'outputs': []
-    };
+    Map<String, dynamic> jsonFileContent = {'inputs': [], 'outputs': []};
     jsonFile.writeAsStringSync(json.encode(jsonFileContent));
   }
   Map<String, dynamic> jsonFileContent;
