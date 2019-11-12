@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import './utils/storage.dart';
+
 enum Actions {
   SETUP_STORAGE,
   FLOW_COORDINATES,
@@ -47,8 +49,7 @@ Map<String, dynamic> performAction(Actions actionName,
   switch (actionName) {
     case Actions.SETUP_STORAGE:
       {
-        jsonFile.createSync();
-        jsonFile.writeAsStringSync(json.encode(appStore));
+        initialiseStorage(directory);
       }
       break;
     case Actions.FLOW_COORDINATES:
