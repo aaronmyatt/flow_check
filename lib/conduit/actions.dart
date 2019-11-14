@@ -62,10 +62,11 @@ Map<String, dynamic> performAction(Actions actionName,
       break;
     case Actions.NAME_INPUT:
       {
-        Map<String, dynamic> jsonFileContent;
-        jsonFileContent = json.decode(jsonFile.readAsStringSync());
-        jsonFileContent.addAll({'currentName': params['currentName']});
-        jsonFile.writeAsStringSync(json.encode(jsonFileContent));
+        Map<String, dynamic> jsonFileContent = saveToStore(
+            directory,
+            'currentName',
+            params['currentName']);
+
         output.update('data', (value) {
           return jsonFileContent['currentName'];
         });
@@ -215,4 +216,6 @@ void main() {
   print(performAction(Actions.SETUP_STORAGE));
   print(
       performAction(Actions.FLOW_COORDINATES, params: {'tapX': 1, 'tapY': 2}));
+  print(
+      performAction(Actions.NAME_INPUT, params: {'currentName': 'Aaron'}));
 }
