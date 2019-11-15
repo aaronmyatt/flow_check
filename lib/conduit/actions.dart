@@ -40,8 +40,8 @@ Map<String, dynamic> performAction(Actions actionName,
   logit(actionName, params);
 
   Map<String, dynamic> output = {'data': {}, 'status': 'success'};
-  Directory directory = params['directory'] ?? getDirectory();
-  File jsonFile = File(directory.path + path);
+  Directory directory = params['dictory'] ?? getDirectory();
+  Map<String, dynamic> jsonFileContent;
 
   switch (actionName) {
     case Actions.SETUP_STORAGE:
@@ -51,42 +51,31 @@ Map<String, dynamic> performAction(Actions actionName,
       break;
     case Actions.FLOW_COORDINATES:
       {
-        Map<String, dynamic> jsonFileContent = saveToStore(
+        jsonFileContent = saveToStore(
             directory,
             'currentCoordinates',
             {'tapX': params['tapX'], 'tapY': params['tapY']});
-        output.update('data', (value) {
-          return jsonFileContent['currentCoordinates'];
-        });
       }
       break;
     case Actions.NAME_INPUT:
       {
-        Map<String, dynamic> jsonFileContent = saveToStore(
+        jsonFileContent = saveToStore(
             directory,
             'currentName',
             params['currentName']);
-
-        output.update('data', (value) {
-          return jsonFileContent['currentName'];
-        });
       }
       break;
     case Actions.STORE_FLOW:
       {
-        Map<String, dynamic> jsonFileContent;
-        jsonFileContent = json.decode(jsonFile.readAsStringSync());
-        jsonFileContent.addAll({"currentFlow": params['flow']});
-        jsonFile.writeAsStringSync(json.encode(jsonFileContent));
-        output.update('data', (value) {
-          return jsonFileContent['currentFlow'];
-        });
+        jsonFileContent = saveToStore(
+            directory,
+            'currentFlow',
+            params['currentFlow']);
       }
       break;
     case Actions.STORE_REPORT:
       {
-        Map<String, dynamic> jsonFileContent;
-        jsonFileContent = json.decode(jsonFile.readAsStringSync());
+        jsonFileContent = fetchToStore(directory);
         Map flow = {
           "name": jsonFileContent["currentName"],
           "flowType": jsonFileContent["currentFlow"],
@@ -95,17 +84,18 @@ Map<String, dynamic> performAction(Actions actionName,
               .now()
               .millisecondsSinceEpoch,
         };
-        jsonFileContent["flowList"].add(flow);
-        jsonFile.writeAsStringSync(json.encode(jsonFileContent));
-        output.update('data', (value) {
-          return flow;
-        });
+        List flowList = jsonFileContent["flowList"];
+        flowList.add(flow);
+
+        jsonFileContent = saveToStore(
+            directory,
+            'flowList',
+            flowList);
       }
       break;
     case Actions.LIST_FLOWS:
       {
-        Map<String, dynamic> jsonFileContent;
-        jsonFileContent = json.decode(jsonFile.readAsStringSync());
+        jsonFileContent = fetchToStore(directory);
         output.update('data', (value) {
           return jsonFileContent["flowList"];
         });
@@ -113,22 +103,15 @@ Map<String, dynamic> performAction(Actions actionName,
       break;
     case Actions.ACTIVATE_FLOW:
       {
-        Map<String, dynamic> jsonFileContent;
-        jsonFileContent = json.decode(jsonFile.readAsStringSync());
-        jsonFileContent["activeFlow"] = params["flow"];
-        jsonFile.writeAsStringSync(json.encode(jsonFileContent));
-        output.update('data', (value) {
-          return jsonFileContent['activeFlow'];
-        });
+        jsonFileContent = saveToStore(
+            directory,
+            'activeFlow',
+            params["flow"]);
       }
       break;
     case Actions.ACTIVE_FLOW:
       {
-        Map<String, dynamic> jsonFileContent;
-        jsonFileContent = json.decode(jsonFile.readAsStringSync());
-        output.update('data', (value) {
-          return jsonFileContent['activeFlow'];
-        });
+        jsonFileContent = fetchToStore(directory);
       }
       break;
     default:
@@ -137,6 +120,9 @@ Map<String, dynamic> performAction(Actions actionName,
       }
   }
 
+  output.update('data', (value) {
+    return jsonFileContent;
+  });
   log_output(actionName, output);
   return output;
 }
@@ -190,7 +176,7 @@ void log_output(Actions action, Map output) {
     "action": action.toString(),
     "params": output
   };
-
+  log(entry.toString());
   logAction(entry, 'outputs');
 }
 
@@ -218,4 +204,11 @@ void main() {
       performAction(Actions.FLOW_COORDINATES, params: {'tapX': 1, 'tapY': 2}));
   print(
       performAction(Actions.NAME_INPUT, params: {'currentName': 'Aaron'}));
+  print(
+      performAction(Actions.STORE_FLOW, params: {'flow': 'flow'}));
+  print(
+      performAction(Actions.STORE_REPORT));
+  var store = fetchToStore(getDirectory());
+  performAction(Actions.ACTIVATE_FLOW, params: {'flow': store['flowList'][0]});
+  performAction(Actions.ACTIVE_FLOW);
 }

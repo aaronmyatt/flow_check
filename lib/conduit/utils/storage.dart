@@ -1,7 +1,24 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flow_check/conduit/actions.dart';
+Map<String, dynamic> appStore = {
+  "currentCoordinates": {
+    "tapX": 0.0,
+    "tapY": 0.0,
+  },
+  "currentName": "",
+  "currentFlow": "",
+  "flowList": [],
+  "activeFlow": {
+    "timestamp": "",
+    "name": "",
+    "flowType": "",
+    "coordinates": {
+      "tapX": 0.0,
+      "tapY": 0.0,
+    }
+  }
+};
 
 String path = "/appStore.json";
 
@@ -16,8 +33,13 @@ Map<String, dynamic> saveToStore(Directory directory, String key,
     dynamic value) {
   Map<String, dynamic> jsonFileContent;
   File jsonFile = File(directory.path + path);
-  jsonFileContent = json.decode(jsonFile.readAsStringSync());
+  jsonFileContent = fetchToStore(directory);
   jsonFileContent[key] = value;
   jsonFile.writeAsStringSync(json.encode(jsonFileContent));
   return jsonFileContent;
+}
+
+Map<String, dynamic> fetchToStore(Directory directory,) {
+  File jsonFile = File(directory.path + path);
+  return json.decode(jsonFile.readAsStringSync());
 }

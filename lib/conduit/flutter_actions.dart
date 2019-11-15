@@ -9,11 +9,10 @@ void tapFlowGraph(offset, screenWidth) {
   getApplicationDocumentsDirectory().then((Directory directory) {
     Conduit.performAction(Conduit.Actions.FLOW_COORDINATES,
         params: {'tapX': offset.dx, 'tapY': offset.dy, 'directory': directory});
-    Conduit.performAction(Conduit.Actions.STORE_FLOW, params: {
-      'flow':
-          FlowAreas(screenWidth, screenWidth).flowCheck(offset.dx, offset.dy),
-      'directory': directory
-    });
+    String flowType =
+    FlowAreas(screenWidth, screenWidth).flowCheck(offset.dx, offset.dy);
+    Conduit.performAction(Conduit.Actions.STORE_FLOW,
+        params: {'currentFlow': flowType, 'directory': directory});
   });
 }
 
@@ -23,7 +22,9 @@ void submitFlow(text) {
         params: {'currentName': text, 'directory': directory});
     Map output = Conduit.performAction(Conduit.Actions.STORE_REPORT,
         params: {'directory': directory});
+    List flowList = output['data']['flowList'];
+    var latestFlow = flowList.last;
     Conduit.performAction(Conduit.Actions.ACTIVATE_FLOW,
-        params: {"flow": output['data'], 'directory': directory});
+        params: {"flow": latestFlow, 'directory': directory});
   });
 }
