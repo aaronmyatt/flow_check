@@ -13,8 +13,7 @@ void main() => runApp(FlowCheck());
 class FlowCheck extends StatelessWidget {
   FlowCheck() {
     getApplicationDocumentsDirectory().then((Directory directory) {
-      Conduit.performAction(Conduit.Actions.SETUP_STORAGE,
-          params: {'directory': directory});
+      Conduit.setupStorage(dir: directory);
     });
   }
 

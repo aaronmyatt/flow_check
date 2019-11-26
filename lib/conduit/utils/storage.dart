@@ -33,13 +33,13 @@ Map<String, dynamic> saveToStore(Directory directory, String key,
     dynamic value) {
   Map<String, dynamic> jsonFileContent;
   File jsonFile = File(directory.path + path);
-  jsonFileContent = fetchToStore(directory);
+  jsonFileContent = fetchFromStore(directory);
   jsonFileContent[key] = value;
   jsonFile.writeAsStringSync(json.encode(jsonFileContent));
   return jsonFileContent;
 }
 
-Map<String, dynamic> fetchToStore(Directory directory,) {
+Map<String, dynamic> fetchFromStore(Directory directory,) {
   File jsonFile = File(directory.path + path);
   return json.decode(jsonFile.readAsStringSync());
 }

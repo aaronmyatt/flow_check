@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flow_check/bottom_navigation_bar.dart';
 import 'package:flow_check/flow_areas.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:strings/strings.dart';
 
@@ -17,9 +18,8 @@ class FlowViewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: getApplicationDocumentsDirectory().then((Directory directory) {
-          Map output = Conduit.performAction(
-              Conduit.Actions.ACTIVE_FLOW, params: {'directory': directory});
-          return output['data'];
+          Map output = Conduit.getStore(dir: directory);
+          return output['activeFlow'];
         }),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           switch (snapshot.connectionState) {
@@ -27,7 +27,9 @@ class FlowViewPage extends StatelessWidget {
               return Text('Press button to start.');
             case ConnectionState.active:
             case ConnectionState.waiting:
-              return Text('Awaiting result...');
+              return Center(
+                child: Text('...'),
+              );
             case ConnectionState.done:
               if (snapshot.hasError) return Text('Error: ${snapshot.error}');
 
@@ -63,12 +65,14 @@ class FlowViewPage extends StatelessWidget {
                             .width,
                       ),
                     ),
-                    Icon(
-                      Icons.face,
-                      size: 85.0,
+                    SvgPicture.asset(
+                      'assets/nostalgia.svg',
+                      color: Colors.black,
+                      width: 60.0,
+                      height: 60.0,
                     ),
                     Text(
-                      "In a state of: ${capitalize(flowType)}",
+                      "${name} could be in a state of: ${capitalize(flowType)}",
                       style: TextStyle(
                         fontSize: 24.0,
                       ),

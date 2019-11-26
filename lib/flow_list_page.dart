@@ -20,9 +20,7 @@ class FlowListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: getApplicationDocumentsDirectory().then((Directory directory) {
-          Map output = Conduit.performAction(
-              Conduit.Actions.LIST_FLOWS, params: {'directory': directory});
-          return output['data'];
+          return Conduit.listFlows(dir: directory);
         }),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           switch (snapshot.connectionState) {
@@ -64,8 +62,7 @@ class FlowList extends StatelessWidget {
         return ListTile(
           onTap: () {
             getApplicationDocumentsDirectory().then((Directory directory) {
-              Conduit.performAction(Conduit.Actions.ACTIVATE_FLOW,
-                  params: {'flow': item, 'directory': directory});
+              Conduit.activateFlow(item, dir: directory);
               Navigator.pushNamed(context, '/canvas');
             });
           },

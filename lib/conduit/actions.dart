@@ -1,19 +1,7 @@
-import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import './utils/storage.dart';
 
-enum Actions {
-  SETUP_STORAGE,
-  FLOW_COORDINATES,
-  NAME_INPUT,
-  STORE_FLOW,
-  STORE_REPORT,
-  LIST_FLOWS,
-  ACTIVATE_FLOW,
-  ACTIVE_FLOW,
-}
 
 String path = "/appStore.json";
 Map<String, dynamic> appStore = {
@@ -35,96 +23,8 @@ Map<String, dynamic> appStore = {
   }
 };
 
-Map<String, dynamic> performAction(Actions actionName,
-    {Map<String, dynamic> params: const {}}) {
-  logit(actionName, params);
-
-  Map<String, dynamic> output = {'data': {}, 'status': 'success'};
-  Directory directory = params['dictory'] ?? getDirectory();
-  Map<String, dynamic> jsonFileContent;
-
-  switch (actionName) {
-    case Actions.SETUP_STORAGE:
-      {
-        initialiseStorage(directory);
-      }
-      break;
-    case Actions.FLOW_COORDINATES:
-      {
-        jsonFileContent = saveToStore(
-            directory,
-            'currentCoordinates',
-            {'tapX': params['tapX'], 'tapY': params['tapY']});
-      }
-      break;
-    case Actions.NAME_INPUT:
-      {
-        jsonFileContent = saveToStore(
-            directory,
-            'currentName',
-            params['currentName']);
-      }
-      break;
-    case Actions.STORE_FLOW:
-      {
-        jsonFileContent = saveToStore(
-            directory,
-            'currentFlow',
-            params['currentFlow']);
-      }
-      break;
-    case Actions.STORE_REPORT:
-      {
-        jsonFileContent = fetchToStore(directory);
-        Map flow = {
-          "name": jsonFileContent["currentName"],
-          "flowType": jsonFileContent["currentFlow"],
-          "coordinates": jsonFileContent["currentCoordinates"],
-          "timestamp": DateTime
-              .now()
-              .millisecondsSinceEpoch,
-        };
-        List flowList = jsonFileContent["flowList"];
-        flowList.add(flow);
-
-        jsonFileContent = saveToStore(
-            directory,
-            'flowList',
-            flowList);
-      }
-      break;
-    case Actions.LIST_FLOWS:
-      {
-        jsonFileContent = fetchToStore(directory);
-        output.update('data', (value) {
-          return jsonFileContent["flowList"];
-        });
-      }
-      break;
-    case Actions.ACTIVATE_FLOW:
-      {
-        jsonFileContent = saveToStore(
-            directory,
-            'activeFlow',
-            params["flow"]);
-      }
-      break;
-    case Actions.ACTIVE_FLOW:
-      {
-        jsonFileContent = fetchToStore(directory);
-      }
-      break;
-    default:
-      {
-        log('NO MATCH', name: 'DEFAULT ACTION');
-      }
-  }
-
-  output.update('data', (value) {
-    return jsonFileContent;
-  });
-  log_output(actionName, output);
-  return output;
+Directory directory(dir) {
+  return dir ?? getDirectory();
 }
 
 Directory getDirectory() {
@@ -133,82 +33,78 @@ Directory getDirectory() {
   return directory;
 }
 
-bool onMobile = (Platform.isAndroid || Platform.isIOS);
+void setupStorage({Directory dir: null}) {
+  initialiseStorage(directory(dir));
+}
 
-void logit(Actions action, Map params) {
-  if (onMobile) {
-    return;
-  }
-  File jsonFile = File(getDirectory().path + '/log.json');
-  bool doesNotExist = (jsonFile.existsSync() == false);
+Map<String, dynamic> flowCoordinates(double tapX, double tapY,
+    {Directory dir: null}) {
+  return saveToStore(
+      directory(dir),
+      'currentCoordinates',
+      {'tapX': tapX, 'tapY': tapY});
+}
 
-  if (doesNotExist) {
-    jsonFile.createSync();
-    Map<String, dynamic> jsonFileContent = {"entries": []};
-    jsonFile.writeAsStringSync(json.encode(jsonFileContent));
-  }
+Map<String, dynamic> nameInput(String name, {Directory dir: null}) {
+  return saveToStore(
+      directory(dir),
+      'currentName',
+      name);
+}
 
-  Map entry = {
+Map<String, dynamic> storeFlow(String flow, {Directory dir: null}) {
+  return saveToStore(
+      directory(dir),
+      'currentFlow',
+      flow);
+}
+
+Map<String, dynamic> storeReport({Directory dir: null}) {
+  Map<String, dynamic> jsonFileContent = fetchFromStore(directory(dir));
+  Map<String, dynamic> flow = {
+    "name": jsonFileContent["currentName"],
+    "flowType": jsonFileContent["currentFlow"],
+    "coordinates": jsonFileContent["currentCoordinates"],
     "timestamp": DateTime
         .now()
         .millisecondsSinceEpoch,
-    "action": action.toString(),
-    "params": params
   };
+  List flowList = jsonFileContent["flowList"];
+  flowList.add(flow);
 
-  Map<String, dynamic> jsonFileContent;
-  jsonFileContent = json.decode(jsonFile.readAsStringSync());
-  jsonFileContent["entries"].add(entry);
-  jsonFile.writeAsStringSync(json.encode(jsonFileContent));
-
-  logAction(entry, 'inputs');
+  return saveToStore(
+      directory(dir),
+      'flowList',
+      flowList);
 }
 
-void log_output(Actions action, Map output) {
-  if (onMobile) {
-    return;
-  }
-
-  Map entry = {
-    "timestamp": DateTime
-        .now()
-        .millisecondsSinceEpoch,
-    "action": action.toString(),
-    "params": output
-  };
-  log(entry.toString());
-  logAction(entry, 'outputs');
+List listFlows({Directory dir: null}) {
+  Map<String, dynamic> jsonFileContent = fetchFromStore(directory(dir));
+  return jsonFileContent["flowList"];
 }
 
-void logAction(entry, in_out) {
-  if (onMobile) {
-    return;
-  }
-  File jsonFile = File(getDirectory().path + '/${entry['action']}.log.json');
-  bool doesNotExist = (jsonFile.existsSync() == false);
+Map<String, dynamic> activateFlow(Map<String, dynamic> flow,
+    {Directory dir: null}) {
+  return saveToStore(
+      directory(dir),
+      'activeFlow',
+      flow);
+}
 
-  if (doesNotExist) {
-    jsonFile.createSync();
-    Map<String, dynamic> jsonFileContent = {'inputs': [], 'outputs': []};
-    jsonFile.writeAsStringSync(json.encode(jsonFileContent));
-  }
-  Map<String, dynamic> jsonFileContent;
-  jsonFileContent = json.decode(jsonFile.readAsStringSync());
-  jsonFileContent[in_out].add(entry);
-  jsonFile.writeAsStringSync(json.encode(jsonFileContent));
+Map<String, dynamic> getStore({Directory dir: null}) {
+  return fetchFromStore(directory(dir));
 }
 
 void main() {
-  print(performAction(Actions.SETUP_STORAGE));
-  print(
-      performAction(Actions.FLOW_COORDINATES, params: {'tapX': 1, 'tapY': 2}));
-  print(
-      performAction(Actions.NAME_INPUT, params: {'currentName': 'Aaron'}));
-  print(
-      performAction(Actions.STORE_FLOW, params: {'flow': 'flow'}));
-  print(
-      performAction(Actions.STORE_REPORT));
-  var store = fetchToStore(getDirectory());
-  performAction(Actions.ACTIVATE_FLOW, params: {'flow': store['flowList'][0]});
-  performAction(Actions.ACTIVE_FLOW);
+  setupStorage();
+  print(flowCoordinates(1, 2));
+//  print(
+//      performAction(Actions.NAME_INPUT, params: {'currentName': 'Aaron'}));
+//  print(
+//      performAction(Actions.STORE_FLOW, params: {'flow': 'flow'}));
+//  print(
+//      performAction(Actions.STORE_REPORT));
+//  var store = fetchToStore(getDirectory());
+//  performAction(Actions.ACTIVATE_FLOW, params: {'flow': store['flowList'][0]});
+//  performAction(Actions.ACTIVE_FLOW);
 }
