@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flow_check/conduit/actions.dart' as Conduit;
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:strings/strings.dart';
 
@@ -66,9 +67,11 @@ class FlowList extends StatelessWidget {
               Navigator.pushNamed(context, '/canvas');
             });
           },
-          leading: Icon(
-            Icons.face,
-            size: 45.0,
+          leading: SvgPicture.asset(
+            Conduit.flowTypeIconPath(item['flowType']),
+            color: Colors.black,
+            width: 60.0,
+            height: 60.0,
           ),
           title: Row(
             children: <Widget>[

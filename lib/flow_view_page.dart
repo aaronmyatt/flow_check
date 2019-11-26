@@ -65,11 +65,14 @@ class FlowViewPage extends StatelessWidget {
                             .width,
                       ),
                     ),
-                    SvgPicture.asset(
-                      'assets/nostalgia.svg',
-                      color: Colors.black,
-                      width: 60.0,
-                      height: 60.0,
+                    Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: SvgPicture.asset(
+                        Conduit.flowTypeIconPath(flowType),
+                        color: Colors.black,
+                        width: 60.0,
+                        height: 60.0,
+                      ),
                     ),
                     Text(
                       "${name} could be in a state of: ${capitalize(flowType)}",
