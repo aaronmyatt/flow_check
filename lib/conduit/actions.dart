@@ -2,7 +2,6 @@ import 'dart:io';
 
 import './utils/storage.dart';
 
-
 String path = "/appStore.json";
 Map<String, dynamic> appStore = {
   "currentCoordinates": {
@@ -40,23 +39,15 @@ void setupStorage({Directory dir: null}) {
 Map<String, dynamic> flowCoordinates(double tapX, double tapY,
     {Directory dir: null}) {
   return saveToStore(
-      directory(dir),
-      'currentCoordinates',
-      {'tapX': tapX, 'tapY': tapY});
+      directory(dir), 'currentCoordinates', {'tapX': tapX, 'tapY': tapY});
 }
 
 Map<String, dynamic> nameInput(String name, {Directory dir: null}) {
-  return saveToStore(
-      directory(dir),
-      'currentName',
-      name);
+  return saveToStore(directory(dir), 'currentName', name);
 }
 
 Map<String, dynamic> storeFlow(String flow, {Directory dir: null}) {
-  return saveToStore(
-      directory(dir),
-      'currentFlow',
-      flow);
+  return saveToStore(directory(dir), 'currentFlow', flow);
 }
 
 Map<String, dynamic> storeReport({Directory dir: null}) {
@@ -72,10 +63,7 @@ Map<String, dynamic> storeReport({Directory dir: null}) {
   List flowList = jsonFileContent["flowList"];
   flowList.add(flow);
 
-  return saveToStore(
-      directory(dir),
-      'flowList',
-      flowList);
+  return saveToStore(directory(dir), 'flowList', flowList);
 }
 
 List listFlows({Directory dir: null}) {
@@ -85,10 +73,7 @@ List listFlows({Directory dir: null}) {
 
 Map<String, dynamic> activateFlow(Map<String, dynamic> flow,
     {Directory dir: null}) {
-  return saveToStore(
-      directory(dir),
-      'activeFlow',
-      flow);
+  return saveToStore(directory(dir), 'activeFlow', flow);
 }
 
 Map<String, dynamic> getStore({Directory dir: null}) {

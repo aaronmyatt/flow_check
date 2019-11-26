@@ -8,8 +8,8 @@ import '../flow_areas.dart';
 void tapFlowGraph(offset, screenWidth) {
   getApplicationDocumentsDirectory().then((Directory directory) {
     Conduit.flowCoordinates(offset.dx, offset.dy, dir: directory);
-    String flowType = FlowAreas(screenWidth, screenWidth).flowCheck(
-        offset.dx, offset.dy);
+    String flowType =
+    FlowAreas(screenWidth, screenWidth).flowCheck(offset.dx, offset.dy);
     Conduit.storeFlow(flowType, dir: directory);
   });
 }

@@ -56,8 +56,7 @@ void main() {
   test('should clasify offset(50%, 50%) as flow', () {
     final flowAreas = FlowAreas(size.width, size.height);
 
-    String flow =
-    flowAreas.flowCheck(size.width * 0.5, size.height * 0.5);
+    String flow = flowAreas.flowCheck(size.width * 0.5, size.height * 0.5);
 
     expect(flow, 'flow');
   });
