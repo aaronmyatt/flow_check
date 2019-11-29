@@ -1,3 +1,4 @@
+import 'package:flow_check/base/BaseAppBar.dart';
 import 'package:flow_check/graph.dart' as graph;
 import 'package:flutter/material.dart';
 
@@ -13,14 +14,20 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text(this.pageTitle),
-      ),
+      appBar: BaseAppBar(this.pageTitle, context),
       bottomNavigationBar: BottomNavBar(currentIndex),
       body: SingleChildScrollView(
         child: Column(
-          children: <Widget>[graph.Graph(), NameInput()],
+          children: <Widget>[
+            graph.Graph(),
+            NameInput(),
+            RaisedButton.icon(
+                icon: Icon(Icons.info),
+                label: Text('Learn More'),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/info');
+                }),
+          ],
         ),
       ),
     );
@@ -42,10 +49,7 @@ class NameInput extends StatelessWidget {
             decoration: InputDecoration(
               prefixIcon: Icon(
                 Icons.person,
-                color: Theme
-                    .of(context)
-                    .iconTheme
-                    .color,
+                color: Theme.of(context).iconTheme.color,
               ),
               hintText: 'Enter a name',
             ),

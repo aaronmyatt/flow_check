@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flow_check/bottom_navigation_bar.dart';
 import 'package:flow_check/flow_areas.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:strings/strings.dart';
 
+import 'base/BaseAppBar.dart';
 import 'conduit/actions.dart' as Conduit;
 
 class FlowViewPage extends StatelessWidget {
@@ -46,41 +48,39 @@ class FlowViewPage extends StatelessWidget {
                 );
               }
               return Scaffold(
-                appBar: AppBar(
-                  title: Text("$name's Flow"),
-                ),
+                appBar: BaseAppBar(this.pageTitle, context, backButton: true),
                 bottomNavigationBar: BottomNavBar(1),
-                body: Column(
-                  children: <Widget>[
-                    Center(
-                      child: Container(
-                        child: shapes,
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width,
-                        height: MediaQuery
-                            .of(context)
-                            .size
-                            .width,
+                body: SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      Center(
+                        child: Container(
+                          child: shapes,
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.width,
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: SvgPicture.asset(
-                        Conduit.flowTypeIconPath(flowType),
-                        color: Colors.black,
-                        width: 60.0,
-                        height: 60.0,
+                      Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: SvgPicture.asset(
+                          Conduit.flowTypeIconPath(flowType),
+                          color: Colors.black,
+                          width: 60.0,
+                          height: 60.0,
+                        ),
                       ),
-                    ),
-                    Text(
-                      "${name} could be in a state of: ${capitalize(flowType)}",
-                      style: TextStyle(
-                        fontSize: 24.0,
+                      Text(
+                        "${name} could be in a state of: ${capitalize(flowType)}",
+                        style: TextStyle(
+                          fontSize: 24.0,
+                        ),
                       ),
-                    ),
-                  ],
+                      Padding(
+                          padding: EdgeInsets.all(15),
+                          child: Text(
+                              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."))
+                    ],
+                  ),
                 ),
               );
           }

@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:strings/strings.dart';
 
+import 'base/BaseAppBar.dart';
 import 'bottom_navigation_bar.dart';
 
 const ONE_MINUTE = 60000;
@@ -33,10 +34,7 @@ class FlowListPage extends StatelessWidget {
             case ConnectionState.done:
               if (snapshot.hasError) return Text('Error: ${snapshot.error}');
               return Scaffold(
-                appBar: AppBar(
-                  automaticallyImplyLeading: false,
-                  title: Text(pageTitle),
-                ),
+                appBar: BaseAppBar(this.pageTitle, context),
                 bottomNavigationBar: BottomNavBar(currentIndex),
                 body: FlowList(items: snapshot.data),
               );
