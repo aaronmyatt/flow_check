@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
@@ -21,7 +22,10 @@ class FlowViewPage extends StatelessWidget {
     return FutureBuilder(
         future: getApplicationDocumentsDirectory().then((Directory directory) {
           Map output = Conduit.getStore(dir: directory);
-          return output['activeFlow'];
+          return Future.wait([
+            Future.value(output['activeFlow']),
+            DefaultAssetBundle.of(context).loadString("assets/flow.json")
+          ]);
         }),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           switch (snapshot.connectionState) {
@@ -35,8 +39,9 @@ class FlowViewPage extends StatelessWidget {
             case ConnectionState.done:
               if (snapshot.hasError) return Text('Error: ${snapshot.error}');
 
-              String flowType = snapshot.data["flowType"];
-              String name = snapshot.data["name"];
+              String flowType = snapshot.data[0]["flowType"];
+              String name = snapshot.data[0]["name"];
+              Map content = json.decode(snapshot.data[1]);
               Widget shapes;
               if (flowType == 'flow') {
                 shapes = CustomPaint(
@@ -70,15 +75,15 @@ class FlowViewPage extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "${name} could be in a state of: ${capitalize(flowType)}",
+                        "$name could be in a state of: ${capitalize(flowType)}",
                         style: TextStyle(
                           fontSize: 24.0,
                         ),
                       ),
                       Padding(
-                          padding: EdgeInsets.all(15),
-                          child: Text(
-                              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."))
+                        padding: EdgeInsets.all(15),
+                        child: Text(content["text"].replaceAll('\$name', name)),
+                      )
                     ],
                   ),
                 ),
@@ -99,11 +104,9 @@ class FlowShape extends CustomPainter {
     var rect = Offset.zero & size;
     var flowArea = activeFlowArea(size.width, size.height);
 
-    canvas.drawRect(rect, Paint()
-      ..color = Colors.black12);
+    canvas.drawRect(rect, Paint()..color = Colors.black12);
 
-    canvas.drawPath(flowArea.path, Paint()
-      ..color = Colors.black54);
+    canvas.drawPath(flowArea.path, Paint()..color = Colors.black54);
   }
 
   activeFlowArea(width, height) {

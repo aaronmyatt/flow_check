@@ -18,7 +18,7 @@ void submitFlow(text) {
   getApplicationDocumentsDirectory().then((Directory directory) {
     Conduit.nameInput(text, dir: directory);
     Map output = Conduit.storeReport(dir: directory);
-    List flowList = output['flowList'];
+    List flowList = output["flowList"];
     var latestFlow = flowList.last;
     Conduit.activateFlow(latestFlow, dir: directory);
   });
