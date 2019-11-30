@@ -24,7 +24,8 @@ class FlowViewPage extends StatelessWidget {
           Map output = Conduit.getStore(dir: directory);
           return Future.wait([
             Future.value(output['activeFlow']),
-            DefaultAssetBundle.of(context).loadString("assets/flow.json")
+            DefaultAssetBundle.of(context)
+                .loadString("assets/${output['activeFlow']['flowType']}.json")
           ]);
         }),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
