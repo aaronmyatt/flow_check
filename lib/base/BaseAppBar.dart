@@ -1,25 +1,27 @@
+import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flutter/material.dart';
 
-Widget BaseAppBar(pageTitle, context, {backButton: false, infoButton: true}) {
+Widget BaseAppBar(pageTitle, context, {backButton: false}) {
   return AppBar(
     automaticallyImplyLeading: backButton,
     title: Text(pageTitle),
-    actions: actions(context, infoButton),
+    actions: [InfoButton(context)],
   );
 }
 
-List<Widget> actions(context, infoButton) {
-  List<Widget> actionList = [];
-  if (infoButton) {
-    actionList.add(InfoButton(context));
-  }
-  return actionList;
-}
-
 Widget InfoButton(context) {
-  return IconButton(
-      icon: Icon(Icons.info),
-      onPressed: () {
-        Navigator.pushNamed(context, '/info');
-      });
+  return DescribedFeatureOverlay(
+      featureId: 'info_button',
+      // Unique id that identifies this overlay.
+      tapTarget: const Icon(Icons.info),
+      // The widget that will be displayed as the tap target.
+      title: Text('Learn more about flow and Flow Check.'),
+      backgroundColor: Theme.of(context).backgroundColor,
+      targetColor: Colors.white,
+      textColor: Colors.white,
+      child: IconButton(
+          icon: const Icon(Icons.info),
+          onPressed: () {
+            Navigator.pushNamed(context, '/info');
+          }));
 }

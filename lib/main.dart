@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flow_check/conduit/actions.dart' as Conduit;
 import 'package:flow_check/flow_info_page.dart' as flow_info;
 import 'package:flow_check/flow_list_page.dart' as flow_list;
@@ -20,16 +21,18 @@ class FlowCheck extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: flowCheckTheme,
-      initialRoute: '/',
-      routes: {
-        '/': (_) => home.HomePage('Flow Check'),
-        '/list': (_) => flow_list.FlowListPage('Flow History'),
-        '/canvas': (_) => flow_view.FlowViewPage('Flow View'),
-        '/info': (_) => flow_info.FlowInfoPage('What is flow?'),
-      },
+    return FeatureDiscovery(
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: flowCheckTheme,
+        initialRoute: '/',
+        routes: {
+          '/': (_) => home.HomePage('Flow Check'),
+          '/list': (_) => flow_list.FlowListPage('Flow History'),
+          '/canvas': (_) => flow_view.FlowViewPage('Flow View'),
+          '/info': (_) => flow_info.FlowInfoPage('What is flow?'),
+        },
+      ),
     );
   }
 }

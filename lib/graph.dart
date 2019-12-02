@@ -1,4 +1,6 @@
+import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 import 'conduit/flutter_actions.dart';
 
@@ -12,12 +14,32 @@ class GraphState extends State<Graph> {
   double tapY = 0;
 
   @override
+  void initState() {
+    SchedulerBinding.instance.addPostFrameCallback((Duration duration) {
+      FeatureDiscovery.discoverFeatures(
+          context, {'info_button', 'graph', 'submit'});
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    screenWidth = MediaQuery
-        .of(context)
-        .size
-        .width * 0.9;
-    return _graph(context, tapX, tapY);
+    screenWidth = MediaQuery.of(context).size.width * 0.9;
+    return DescribedFeatureOverlay(
+        featureId: 'graph',
+        // Unique id that identifies this overlay.
+        tapTarget: const Icon(
+          Icons.touch_app,
+          size: 44.0,
+        ),
+        // The widget that will be displayed as the tap target.
+        title: Text('Challenge vs Skill = Flow State'),
+        description: Text(
+            'Ask your report to rate their percieved Challenge vs percieved Skill by clicking inside this graph.'),
+        backgroundColor: Theme.of(context).backgroundColor,
+        targetColor: Colors.white,
+        textColor: Colors.white,
+        child: _graph(context, tapX, tapY));
   }
 
   Widget _graph(BuildContext context, double xPos, double yPos) {

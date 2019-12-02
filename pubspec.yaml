@@ -14,7 +14,7 @@ description: A new Flutter project.
 version: 1.0.0+2
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.2.0 <3.0.0"
 
 # https://github.com/flutter/plugins
 dependencies:
@@ -28,6 +28,7 @@ dependencies:
   path_provider: ^1.4.0 # https://github.com/flutter/plugins/tree/master/packages/path_provider
   strings: ^0.1.2 # https://pub.dev/packages/strings
   flutter_svg: ^0.15.0 # https://pub.dev/packages/flutter_svg
+  feature_discovery: ^0.6.0
 
 
 dev_dependencies:

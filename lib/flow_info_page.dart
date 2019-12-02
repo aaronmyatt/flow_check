@@ -28,8 +28,7 @@ class FlowInfoPage extends StatelessWidget {
               Map content = json.decode(snapshot.data);
               String name = 'Aaron';
               return Scaffold(
-                appBar: BaseAppBar(pageTitle, context,
-                    backButton: true, infoButton: false),
+                appBar: BaseAppBar(pageTitle, context, backButton: true),
                 bottomNavigationBar: BottomNavBar(1),
                 body: Text(content['text'].replaceAll("\$name", name)),
               );

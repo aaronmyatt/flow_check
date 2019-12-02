@@ -1,3 +1,4 @@
+import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flow_check/base/BaseAppBar.dart';
 import 'package:flow_check/graph.dart' as graph;
 import 'package:flutter/material.dart';
@@ -21,12 +22,6 @@ class HomePage extends StatelessWidget {
           children: <Widget>[
             graph.Graph(),
             NameInput(),
-            RaisedButton.icon(
-                icon: Icon(Icons.info),
-                label: Text('Learn More'),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/info');
-                }),
           ],
         ),
       ),
@@ -40,6 +35,12 @@ class NameInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).primaryColor,
+        boxShadow: [
+          BoxShadow(color: Theme.of(context).backgroundColor),
+        ],
+      ),
       child: Column(
         children: <Widget>[
           TextField(
@@ -51,12 +52,37 @@ class NameInput extends StatelessWidget {
                 Icons.person,
                 color: Theme.of(context).iconTheme.color,
               ),
+              suffixIcon: DescribedFeatureOverlay(
+                featureId: 'submit',
+                tapTarget: const Icon(
+                  Icons.check,
+                  size: 44.0,
+                  color: Colors.green,
+                ),
+                title: Text('Enter their name and submit.'),
+                backgroundColor: Theme.of(context).backgroundColor,
+                targetColor: Colors.white,
+                textColor: Colors.white,
+                child: IconButton(
+                  icon: const Icon(Icons.check),
+                  color: Colors.green,
+                  onPressed: () {
+                    if (textController.text != '') {
+                      submitFlow(textController.text);
+                      textController.clear();
+                      Navigator.pushNamed(context, '/canvas');
+                    }
+                  },
+                ),
+              ),
               hintText: 'Enter a name',
             ),
             onSubmitted: (text) {
-              submitFlow(textController.text);
-              textController.clear();
-              Navigator.pushNamed(context, '/canvas');
+              if (textController.text != '') {
+                submitFlow(textController.text);
+                textController.clear();
+                Navigator.pushNamed(context, '/canvas');
+              }
             },
           ),
         ],
