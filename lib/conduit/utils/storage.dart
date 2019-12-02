@@ -22,11 +22,16 @@ Map<String, dynamic> appStore = {
 
 String path = "/appStore.json";
 
-Map<String, dynamic> initialiseStorage(Directory directory) {
+Future<Map<String, dynamic>> initialiseStorage(Directory directory) async {
   File jsonFile = File(directory.path + path);
-  jsonFile.createSync();
-  jsonFile.writeAsStringSync(json.encode(appStore));
-  return appStore;
+  bool exists = await jsonFile.exists();
+  if (exists) {
+    return fetchFromStore(directory);
+  } else {
+    jsonFile.createSync();
+    jsonFile.writeAsStringSync(json.encode(appStore));
+    return appStore;
+  }
 }
 
 Map<String, dynamic> saveToStore(Directory directory, String key,
@@ -39,7 +44,7 @@ Map<String, dynamic> saveToStore(Directory directory, String key,
   return jsonFileContent;
 }
 
-Map<String, dynamic> fetchFromStore(Directory directory,) {
+Map<String, dynamic> fetchFromStore(Directory directory) {
   File jsonFile = File(directory.path + path);
   return json.decode(jsonFile.readAsStringSync());
 }
