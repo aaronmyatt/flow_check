@@ -1,6 +1,7 @@
 import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'conduit/flutter_actions.dart';
 
@@ -15,10 +16,17 @@ class GraphState extends State<Graph> {
 
   @override
   void initState() {
-    SchedulerBinding.instance.addPostFrameCallback((Duration duration) {
-      FeatureDiscovery.discoverFeatures(
-          context, {'info_button', 'graph', 'submit'});
+    SharedPreferences.getInstance().then((SharedPreferences prefs) {
+      print(prefs.getBool('welcome').toString());
+      if (prefs.getBool('welcome') == null) {
+        SchedulerBinding.instance.addPostFrameCallback((Duration duration) {
+          FeatureDiscovery.discoverFeatures(
+              context, {'info_button', 'graph', 'submit'});
+        });
+        prefs.setBool('welcome', true);
+      } else {}
     });
+
     super.initState();
   }
 
@@ -73,7 +81,8 @@ class GraphState extends State<Graph> {
               GestureDetector(
                 onTapDown: (TapDownDetails details) {
                   Offset offset = details.localPosition;
-                  if (offset == Offset(0.0, 0.0)) {} else {
+                  if (offset == Offset(0.0, 0.0)) {
+                  } else {
                     this.setState(() {
                       tapX = offset.dx;
                       tapY = offset.dy;
