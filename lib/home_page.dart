@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flow_check/base/BaseAppBar.dart';
 import 'package:flow_check/graph.dart' as graph;
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'bottom_navigation_bar.dart';
+import 'conduit/actions.dart' as Conduit;
 import 'conduit/flutter_actions.dart';
 
 class HomePage extends StatelessWidget {
@@ -67,26 +71,34 @@ class NameInput extends StatelessWidget {
                   icon: const Icon(Icons.check),
                   color: Colors.green,
                   onPressed: () {
-                    if (textController.text != '') {
-                      submitFlow(textController.text);
-                      textController.clear();
-                      Navigator.pushNamed(context, '/canvas');
-                    }
+                    onSubmit(context);
                   },
                 ),
               ),
               hintText: 'Enter a name',
             ),
-            onSubmitted: (text) {
-              if (textController.text != '') {
-                submitFlow(textController.text);
-                textController.clear();
-                Navigator.pushNamed(context, '/canvas');
-              }
+            onSubmitted: (_) {
+              onSubmit(context);
             },
           ),
         ],
       ),
     );
+  }
+
+  void onSubmit(BuildContext context) {
+    getApplicationDocumentsDirectory().then((Directory directory) {
+      Map store = Conduit.getStore(dir: directory);
+      var coordinates = store["currentCoordinates"];
+      if (coordinates['tapX'] != 0.0 || coordinates['tapY'] != 0.0) {
+        if (textController.text != '') {
+          submitFlow(textController.text);
+          textController.clear();
+          Navigator.pushNamed(context, '/canvas');
+        }
+      } else {
+        FeatureDiscovery.discoverFeatures(context, {'graph'});
+      }
+    });
   }
 }

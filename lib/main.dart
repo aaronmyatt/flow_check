@@ -14,6 +14,7 @@ void main() => runApp(FlowCheck());
 
 class FlowCheck extends StatelessWidget {
   FlowCheck() {
+    WidgetsFlutterBinding.ensureInitialized();
     getApplicationDocumentsDirectory().then((Directory directory) {
       Conduit.setupStorage(dir: directory);
     });

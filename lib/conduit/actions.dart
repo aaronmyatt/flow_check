@@ -63,7 +63,12 @@ Map<String, dynamic> storeReport({Directory dir: null}) {
   List flowList = jsonFileContent["flowList"];
   flowList.add(flow);
 
-  return saveToStore(directory(dir), 'flowList', flowList);
+  Map store = saveToStore(directory(dir), 'flowList', flowList);
+
+  nameInput('', dir: dir);
+  flowCoordinates(0.0, 0.0, dir: dir);
+
+  return store;
 }
 
 List listFlows({Directory dir: null}) {
@@ -90,18 +95,4 @@ String flowTypeIconPath(String flowType) {
     'boredom': 'assets/boredom.svg',
   };
   return paths[flowType];
-}
-
-void main() {
-  setupStorage();
-  print(flowCoordinates(1, 2));
-//  print(
-//      performAction(Actions.NAME_INPUT, params: {'currentName': 'Aaron'}));
-//  print(
-//      performAction(Actions.STORE_FLOW, params: {'flow': 'flow'}));
-//  print(
-//      performAction(Actions.STORE_REPORT));
-//  var store = fetchToStore(getDirectory());
-//  performAction(Actions.ACTIVATE_FLOW, params: {'flow': store['flowList'][0]});
-//  performAction(Actions.ACTIVE_FLOW);
 }

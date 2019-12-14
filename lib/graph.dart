@@ -17,7 +17,6 @@ class GraphState extends State<Graph> {
   @override
   void initState() {
     SharedPreferences.getInstance().then((SharedPreferences prefs) {
-      print(prefs.getBool('welcome').toString());
       if (prefs.getBool('welcome') == null) {
         SchedulerBinding.instance.addPostFrameCallback((Duration duration) {
           FeatureDiscovery.discoverFeatures(
