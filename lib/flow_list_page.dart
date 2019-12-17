@@ -95,7 +95,7 @@ Widget timeAgo(int timestamp) {
       .now()
       .millisecondsSinceEpoch;
   if (((now - timestamp) / ONE_MINUTE) < 6) return Text('Just Now');
-  if (((now - timestamp) / ONE_DAY) >= 1)
-    return Text('${((now - timestamp) / ONE_DAY)} Days Ago');
+  if (((now - timestamp) ~/ ONE_DAY) >= 1)
+    return Text('${((now - timestamp) ~/ ONE_DAY)} Days Ago');
   return Text('Today');
 }
