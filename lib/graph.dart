@@ -1,33 +1,15 @@
 import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'conduit/flutter_actions.dart';
 
-class Graph extends StatefulWidget {
-  State createState() => new GraphState();
-}
-
-class GraphState extends State<Graph> {
+class Graph extends StatelessWidget {
   double screenWidth;
-  double tapX = 0;
-  double tapY = 0;
+  final double tapX;
+  final double tapY;
+  final Function cb;
 
-  @override
-  void initState() {
-    SharedPreferences.getInstance().then((SharedPreferences prefs) {
-      if (prefs.getBool('welcome') == null) {
-        SchedulerBinding.instance.addPostFrameCallback((Duration duration) {
-          FeatureDiscovery.discoverFeatures(
-              context, {'info_button', 'graph', 'submit'});
-        });
-        prefs.setBool('welcome', true);
-      } else {}
-    });
-
-    super.initState();
-  }
+  Graph(this.cb, this.tapX, this.tapY);
 
   @override
   Widget build(BuildContext context) {
@@ -82,10 +64,7 @@ class GraphState extends State<Graph> {
                   Offset offset = details.localPosition;
                   if (offset == Offset(0.0, 0.0)) {
                   } else {
-                    this.setState(() {
-                      tapX = offset.dx;
-                      tapY = offset.dy;
-                    });
+                    cb(offset.dx, offset.dy);
                     tapFlowGraph(offset, screenWidth);
                   }
                 },
