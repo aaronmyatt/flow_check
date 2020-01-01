@@ -10,6 +10,7 @@ Widget BaseAppBar(pageTitle, context, {backButton: false}) {
 }
 
 Widget InfoButton(context) {
+  // cc:onboarding#3;Highlight info button;
   return DescribedFeatureOverlay(
       featureId: 'info_button',
       // Unique id that identifies this overlay.

@@ -1,9 +1,8 @@
+import 'package:flow_check/base/BaseAppBar.dart';
+import 'package:flow_check/bottom_navigation_bar.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import 'base/BaseAppBar.dart';
-import 'bottom_navigation_bar.dart';
 
 class FlowInfoPage extends StatelessWidget {
   final String pageTitle;
@@ -63,7 +62,7 @@ class FlowInfoPage extends StatelessWidget {
                     }),
               TextSpan(
                   text:
-                      ', and a quote of hers succinctly articulates my intentions behind building it and the kind of manager and leader I strive to be:'),
+                  ', and a quote of hers succinctly articulates my intentions behind building it and the kind of manager and leader I strive to be:'),
             ]),
       ),
       Text(

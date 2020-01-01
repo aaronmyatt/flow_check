@@ -1,70 +1,49 @@
-import 'dart:io';
-
 import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flow_check/base/BaseAppBar.dart';
-import 'package:flow_check/graph.dart' as graph;
+import 'package:flow_check/bottom_navigation_bar.dart';
+import 'package:flow_check/flow_areas.dart';
+import 'package:flow_check/flow_view_page.dart';
+import 'package:flow_check/graph.dart';
+import 'package:flow_check/services/flow_list_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'bottom_navigation_bar.dart';
-import 'conduit/actions.dart' as Conduit;
-import 'conduit/flutter_actions.dart';
-
-class HomePage extends StatefulWidget {
-  final String pageTitle;
-
-  HomePage(this.pageTitle);
-
-  State createState() => new HomePageState(pageTitle);
-}
-
-class HomePageState extends State<HomePage> {
+class HomePage extends StatelessWidget {
   final String pageTitle;
   final int currentIndex = 0;
   String name;
-  double tapX = 0.0;
-  double tapY = 0.0;
 
-  HomePageState(this.pageTitle);
+  HomePage(this.pageTitle);
 
   @override
-  void initState() {
+  Widget build(BuildContext context) {
     SharedPreferences.getInstance().then((SharedPreferences prefs) {
+      // cc:onboarding#2;Trigger onboarding;+5;If this is the first time the app is opened
       if (prefs.getBool('welcome') == null) {
         SchedulerBinding.instance.addPostFrameCallback((Duration duration) {
           FeatureDiscovery.discoverFeatures(
               context, {'info_button', 'graph', 'submit'});
         });
+        // cc:onboarding#6;Toggle onboarding;+1;Ensure onboarding is not triggered on next app open
         prefs.setBool('welcome', true);
       } else {}
     });
 
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: BaseAppBar(this.pageTitle, context),
       bottomNavigationBar: BottomNavBar(currentIndex),
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            graph.Graph(updateTapLocation, this.tapX, this.tapY),
+            // cc:app_init#7;Initialise home page widgets
+            Graph(),
             NameInput(),
           ],
         ),
       ),
     );
-  }
-
-  updateTapLocation(tapX, tapY) {
-    this.setState(() {
-      this.tapY = tapY;
-      this.tapX = tapX;
-    });
   }
 }
 
@@ -91,6 +70,7 @@ class NameInput extends StatelessWidget {
                 Icons.person,
                 color: Theme.of(context).iconTheme.color,
               ),
+              // cc:onboarding#5;Highlight the name input
               suffixIcon: DescribedFeatureOverlay(
                 featureId: 'submit',
                 tapTarget: const Icon(
@@ -122,18 +102,27 @@ class NameInput extends StatelessWidget {
   }
 
   void onSubmit(BuildContext context) {
-    getApplicationDocumentsDirectory().then((Directory directory) {
-      Map store = Conduit.getStore(dir: directory);
-      var coordinates = store["currentCoordinates"];
-      if (coordinates['tapX'] != 0.0 || coordinates['tapY'] != 0.0) {
-        if (textController.text != '') {
-          submitFlow(textController.text);
-          textController.clear();
-          Navigator.pushNamed(context, '/canvas');
-        }
-      } else {
+    Offset offset = Provider.of<ValueNotifier<Offset>>(context).value;
+    if (offset != Offset.zero) {
+      if (textController.text != '') {
+        String name = textController.text;
+
+        double width = MediaQuery.of(context).size.width * 0.9;
+        FlowAreas flowAreas = FlowAreas(width, width);
+        String flowType = flowAreas.flowCheck(offset.dx, offset.dy);
+
+        // cc:create_flow#2;Use name and tap location to create Flow
+        FlowListService service = Provider.of<FlowListService>(context)
+            .add(name, offset.dx, offset.dy, flowType);
+        textController.clear();
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    FlowViewPage('Flow View', service.allFlows.last)));
+      }
+    } else {
         FeatureDiscovery.discoverFeatures(context, {'graph'});
       }
-    });
   }
 }

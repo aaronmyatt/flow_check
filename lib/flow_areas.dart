@@ -8,11 +8,11 @@ class FlowAreas {
 
   String flowCheck(double x, double y) {
     List<FlowArea> flows = [
-      FlowAnxietyArea(this.width, this.height),
-      FlowDoubtArea(this.width, this.height),
-      FlowNostalgiaArea(this.width, this.height),
-      FlowBoredomArea(this.width, this.height),
-      FlowApathyArea(this.width, this.height)
+      FlowAnxietyArea(width, height),
+      FlowDoubtArea(width, height),
+      FlowNostalgiaArea(width, height),
+      FlowBoredomArea(width, height),
+      FlowApathyArea(width, height)
     ];
     for (FlowArea flow in flows) {
       if (flow.path.contains(Offset(x, y))) {

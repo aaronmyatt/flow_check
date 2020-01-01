@@ -1,97 +1,98 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:ui';
 
+import 'package:flow_check/base/BaseAppBar.dart';
 import 'package:flow_check/bottom_navigation_bar.dart';
 import 'package:flow_check/flow_areas.dart';
+import 'package:flow_check/services/actions.dart' as Conduit;
+import 'package:flow_check/services/flow_list_service.dart' as flow_service;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:strings/strings.dart';
-
-import 'base/BaseAppBar.dart';
-import 'conduit/actions.dart' as Conduit;
 
 class FlowViewPage extends StatelessWidget {
   final String pageTitle;
+  final flow_service.Flow flow;
 
-  FlowViewPage(this.pageTitle);
+  FlowViewPage(this.pageTitle, this.flow);
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: getApplicationDocumentsDirectory().then((Directory directory) {
-          Map output = Conduit.getStore(dir: directory);
-          return Future.wait([
-            Future.value(output['activeFlow']),
-            DefaultAssetBundle.of(context)
-                .loadString("assets/${output['activeFlow']['flowType']}.json")
-          ]);
-        }),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.none:
-              return Text('Press button to start.');
-            case ConnectionState.active:
-            case ConnectionState.waiting:
-              return Center(
-                child: Text('...'),
-              );
-            case ConnectionState.done:
-              if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-
-              String flowType = snapshot.data[0]["flowType"];
-              String name = snapshot.data[0]["name"];
-              Map content = json.decode(snapshot.data[1]);
-              Widget shapes;
-              if (flowType == 'flow') {
-                shapes = CustomPaint(
-                  painter: AllShapes(),
-                );
-              } else {
-                shapes = CustomPaint(
-                  painter: FlowShape(flowType),
-                );
-              }
-              return Scaffold(
-                appBar: BaseAppBar(this.pageTitle, context, backButton: true),
-                bottomNavigationBar: BottomNavBar(1),
-                body: SingleChildScrollView(
-                  child: Column(
-                    children: <Widget>[
-                      Center(
-                        child: Container(
-                          child: shapes,
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.width,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: SvgPicture.asset(
-                          Conduit.flowTypeIconPath(flowType),
-                          color: Colors.black,
-                          width: 60.0,
-                          height: 60.0,
-                        ),
-                      ),
-                      Text(
-                        "$name could be in a state of: ${capitalize(flowType)}",
-                        style: TextStyle(
-                          fontSize: 24.0,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(15),
-                        child: Text(content["text"].replaceAll('\$name', name)),
-                      )
-                    ],
+    Widget shapes;
+    if (flow.flowType == 'flow') {
+      shapes = CustomPaint(
+        painter: AllShapes(),
+      );
+    } else {
+      shapes = CustomPaint(
+        painter: FlowShape(flow.flowType),
+      );
+    }
+    return Scaffold(
+      appBar: BaseAppBar(this.pageTitle, context, backButton: true),
+      bottomNavigationBar: BottomNavBar(1),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Center(
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color: Colors.black87, width: 2.0),
+                    boxShadow: kElevationToShadow[2]),
+                margin: EdgeInsets.only(top: 20.0),
+                child: shapes,
+                width: MediaQuery.of(context).size.width * 0.6,
+                height: MediaQuery.of(context).size.width * 0.6,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                children: <Widget>[
+                  SvgPicture.asset(
+                    Conduit.flowTypeIconPath(flow.flowType),
+                    color: Colors.black,
+                    width: 60.0,
+                    height: 60.0,
                   ),
-                ),
-              );
-          }
-          return null;
-        });
+                  const SizedBox(
+                    height: 5.0,
+                  ),
+                  Text(
+                    "${flow.name} could be in a state of: ${capitalize(flow.flowType)}",
+                    style: TextStyle(
+                      fontSize: 24.0,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 5.0,
+                  ),
+                  FutureBuilder(
+                      future: DefaultAssetBundle.of(context)
+                          .loadString("assets/${flow.flowType}.json"),
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        switch (snapshot.connectionState) {
+                          case ConnectionState.none:
+                            return Text('Press button to start.');
+                          case ConnectionState.active:
+                          case ConnectionState.waiting:
+                            return Center(
+                              child: Text('...'),
+                            );
+                          case ConnectionState.done:
+                            return Text(json
+                                .decode(snapshot.data)["text"]
+                                .replaceAll('\$name', flow.name));
+                        }
+                      }),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 

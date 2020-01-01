@@ -1,19 +1,14 @@
 import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flutter/material.dart';
-
-import 'conduit/flutter_actions.dart';
+import 'package:provider/provider.dart';
 
 class Graph extends StatelessWidget {
   double screenWidth;
-  final double tapX;
-  final double tapY;
-  final Function cb;
-
-  Graph(this.cb, this.tapX, this.tapY);
 
   @override
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width * 0.9;
+    // cc:onboarding#4;Highlight the graph and how to use it;
     return DescribedFeatureOverlay(
         featureId: 'graph',
         // Unique id that identifies this overlay.
@@ -28,10 +23,13 @@ class Graph extends StatelessWidget {
         backgroundColor: Theme.of(context).backgroundColor,
         targetColor: Colors.white,
         textColor: Colors.white,
-        child: _graph(context, tapX, tapY));
+        child: _graph(context));
   }
 
-  Widget _graph(BuildContext context, double xPos, double yPos) {
+  Widget _graph(BuildContext context) {
+    double xPos = Provider.of<ValueNotifier<Offset>>(context).value.dx;
+    double yPos = Provider.of<ValueNotifier<Offset>>(context).value.dy;
+
     Widget _yAxis = RotatedBox(
       quarterTurns: 3,
       child: Text('CHALLENGE', style: TextStyle(fontWeight: FontWeight.w600)),
@@ -61,12 +59,11 @@ class Graph extends StatelessWidget {
             children: <Widget>[
               GestureDetector(
                 onTapDown: (TapDownDetails details) {
+                  // cc:create_flow#1;Store graph location in Provider
                   Offset offset = details.localPosition;
-                  if (offset == Offset(0.0, 0.0)) {
-                  } else {
-                    cb(offset.dx, offset.dy);
-                    tapFlowGraph(offset, screenWidth);
-                  }
+                  Provider
+                      .of<ValueNotifier<Offset>>(context)
+                      .value = offset;
                 },
                 child: Container(
                   padding:
